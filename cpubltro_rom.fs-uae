@@ -1,0 +1,16 @@
+#!/usr/bin/env fs-uae
+# SPDX-FileCopyrightText: 2023 Nico Bendlin <nico@nicode.net>
+# SPDX-License-Identifier: CC0-1.0
+
+[fs-uae]
+amiga_model = A500
+floppy_drive_count = 0
+governor_warning = 0
+kickstart_file = $CONFIG/cpubltro.rom
+save_states = 0
+save_states_dir = $CONFIG/
+screenshots_output_dir = $CONFIG/
+screenshots_output_mask = 2
+screenshots_output_prefix = cpubltro-rom
+theme = led-bars-edge
+zoom = full
