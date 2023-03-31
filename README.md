@@ -12,9 +12,9 @@ Notes
 -----
 
 Judging from the tests on my Amiga 500,  
-even with an MC68000 it seems possible  
+even with a MC68000 it seems to be possible  
 (with some preloading and loop unrolling)  
-to fill the blitplane just in time.
+to fill at least one blitplane just in time.
 
 - 11 MSB bits undrawn in left-most word
 - example sequence (last complete line):
@@ -46,3 +46,19 @@ to fill the blitplane just in time.
 ```
 
 ![A500 MC68000](captures/a500-000-ecs_1.png)
+
+
+License
+-------
+
+This work is public domain and licensed under the [CC0 1.0 Universal] license.
+
+- [TLDRLegal: CC0 1.0 Universal](https://www.tldrlegal.com/license/creative-commons-cc0-1-0-universal)
+- [gnu.org/licenses: CC0 1.0 Universal](https://www.gnu.org/licenses/license-list.html#CC0)
+
+This project attempts to conform to the [REUSE] recommendations,
+so you should find license information in/for all project files.
+
+[CC0 1.0 Universal]: LICENSES/CC0-1.0.txt
+[REUSE]: https://reuse.software/
+
