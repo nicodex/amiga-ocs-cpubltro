@@ -3,17 +3,16 @@ Amiga CPU Blit Read-Only (Proof of Concept ROM)
 
 Testing CPU drawing without _any_ memory writes.
 
-Target: PAL OCS/ECS with 7(4+2)-bitplane anomaly  
-(Agnus: 4-bitplane DMAs, Denise: 6-bitplane EHB,  
+Target: PAL OCS/ECS with 7(4+2)-bitplane anomaly
+(Agnus: 4-bitplane DMAs, Denise: 6-bitplane EHB,
 last two bitplane data is written with the CPU).
 
 
 Notes
 -----
 
-Judging from the tests on my Amiga 500,  
-even with a MC68000 it seems to be possible  
-(with some preloading and loop unrolling)  
+Judging from the tests on my Amiga 500,
+even with a MC68000 it seems to be possible
 to fill at least one blitplane just in time.
 
 - 11 MSB bits undrawn in left-most word

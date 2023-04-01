@@ -41,7 +41,7 @@ RomBase:
 ;
 RomHeader:
 		dc.l	$0000FFFF   ; diag pattern
-		dc.w	0,0         ; Kick version,revision
+		dc.w	0,1         ; Kick version,revision
 		dc.w	0,0         ; Exec version,revision
 		dc.l	-1          ; System serial number
 		dc.b	0           ; Kick strings
@@ -53,7 +53,7 @@ RomHeader:
 RomTagName:
 		dc.b	'cpubltro.rom',0
 RomTagIdString:
-		dc.b	'cpubltro 0.0 (31.03.2023)',13,10,0
+		dc.b	'cpubltro 0.1 (01.04.2023)',13,10,0
 		dcb.b	*&1,0       ; align to word
 ;
 ; Dummy ROM resident tag to make some ROM parsers happy.
@@ -68,7 +68,10 @@ RomTag:		dc.w	$4AFC       ; RTC_MATCHWORD
 		dc.l    RomTagName
 		dc.l    RomTagIdString
 		dc.l    ColdReset
-		; Force default ColdReset/ColdStart offsets.
+
+;
+; Force default ColdReset/ColdStart offsets (compatibility).
+;
 		dcb.b	($00D0-(*-RomBase)),0
 ColdReset:
 		reset   ; second reset (ColdReboot)
@@ -76,26 +79,50 @@ ColdReset:
 ; ROM entry point
 ;
 ColdStart:
-		; Disable ROM overlay (Gary or Gayle).
-		lea	($00BFE001).l,a5    ; _ciaa
-		; Note: Theoretically not required in this test,
-		; even the supervisor stack should never be used
-		; since all exceptions are disabled. However,
-		; there is no exception vector table here
-		; (maybe in another proof of concept ...),
-		; so we use what is currently in the RAM.
-		move.b	#3,($200,a5)        ; (ciaddra,_ciaa) ; Gayle /OVL
-		bclr.b	#0,(a5)             ; #CIAB_OVERLAY,(ciapra,_ciaa)
-		; Disable/clear all DMAs/interrupts.
-		; SR reg: TTSM-III---XNZVC
-		move.w	#%0010011100000000,sr
-		lea	($00DFF000).l,a6    ; _custom
-		move.w	#$7FFF,d0           ; ~INTF_SETCLR / ~DMAF_SETCLR
-		move.w	d0,($09A,a6)        ; (intena,_custom)
-		move.w	d0,($09C,a6)        ; (intreq,_custom)
-		move.w	d0,($096,a6)        ; (dmacon,_custom)
-		; Initialize (supervisor) stack.
-		lea	($00002000).l,sp    ; twice 040 page size
+		;
+		; Disable/clear all interrupts.
+		;
+		; ; SR: #%TTSM-III---XNZVC
+		move.w	#%0010011100000000,sr   ; supervisor mode, IPL = 7
+		lea	($00DFF000).l,a6        ; _custom
+		move.w	#$7FFF,d0               ; #~INTF_SETCLR
+		move.w	d0,($09A,a6)            ; (intena,_custom)
+		move.w	d0,($09C,a6)            ; (intreq,_custom)
+		;
+		; Disable all DMA.
+		;
+	;	move.w	#$7FFF,d0       ; #~DMAF_SETCLR
+		move.w	d0,($096,a6)    ; (dmacon,_custom)
+		;
+		; Initialize the (supervisor) stack.
+		;
+		;   We have to decide which memory to use for the
+		;   intial supervisor stack. There is neither a
+		;   specified, nor a safe region (some examples:
+		;   - $00040000 A1000 bootstrap, Kickstart 1.2/1.3
+		;   - $00020000 Kickstart 0.7/1.0/1.1
+		;   - $00000400 A3000 bootstrap, Kickstart 2.x/3.x
+		;   the latter address is right at the end of the
+		;   CPU exception vector table, which ends with 192
+		;   (expected to be unused) user exception vectors).
+		;
+		;   However, the overlay is not disabled in this test
+		;   to 'protect' the memory from accedential writes.
+		;   Therefore the stack is (by intention) not usable.
+		;
+		lea	($00000400).l,sp
+		;
+		; [this would] Disable the ROM overlay.
+		;
+		;   For Gary-based systems we set the OVL-pin as output
+		;   and clear the /OVL-bit to disable the ROM overlay.
+		;   On Gayle-based systems (some extension cards emulate
+		;   a Gayle, e.g. to add/provide IDE disks) the overlay
+		;   is disabled with the first write to a CIA-A register.
+		;
+	;	move.b	#3,($00BFE201).l    ; #CIAF_LED|CIAF_OVERLAY,(_ciaa+ciaddra)
+	;	bclr.b	#0,($00BFE001).l    ; #CIAB_OVERLAY,(_ciaa+ciapra).l
+
 InitScreen:
 		; Wait for line 0 (>= 256, < 256).
 0$:		btst.b	#0,($004+1,a6)  ; (vposr:0,_custom)
@@ -142,9 +169,8 @@ MainInit:
 
 		; Clear BPL5DAT/BPL6DAT (only background color).
 		moveq	#0,d0
-		lea	($118,a6),a4    ; (bpldat+4*2,_custom)
-		move.w	d0,(a4)         ; (bpldat+4*2,_custom)
-		move.w	d0,($11A,a6)    ; (bpldat+5*2,_custom)
+		lea	($118,a6),a0    ; (bpldat+4*2,_custom)
+		move.l	d0,(a0)         ; (bpldat+4*2/bpldat+5*2,_custom)
 MainLoop:
 		; Wait for line 0 (>= 256, < 256).
 0$:		btst.b	#0,($004+1,a6)  ; (vposr:0,_custom)
@@ -168,14 +194,14 @@ MainLoop:
 		; between odd and even fields if the numbers do not match.
 		;
 		move.w	#$1000,d0
-2$:		move.w	d0,(a4) ; (bpldat+4*2,_custom)
+2$:		move.w	d0,(a0) ; (bpldat+4*2,_custom)
 		dbf	d0,2$
 
 		; Clear BPL5DAT (only background color).
 		moveq	#0,d0
-		move.w	d0,(a4) ; (bpldat+4*2,_custom)
+		move.w	d0,(a0) ; (bpldat+4*2,_custom)
 		; Test for LMB pressed to leave the main loop.
-		btst.b	#6,(a5) ; #CIAB_GAMEPORT0,(ciapra,_ciaa)
+		btst.b	#6,($00BFE001).l    ; #CIAB_GAMEPORT0,(_ciaa+ciapra).l
 		bne.b	MainLoop
 
 MainExit:
@@ -188,7 +214,7 @@ MainExit:
 		move.w	#%0101010101010101,($118,a6)    ; (bpldat+4*2,_custom)
 		move.w	#%0000000011111111,($11A,a6)    ; (bpldat+5*2,_custom)
 		; Wait for LMB release.
-2$:		btst.b	#6,(a5) ; #CIAB_GAMEPORT0,(ciapra,_ciaa)
+2$:		btst.b	#6,($00BFE001).l    ; #CIAB_GAMEPORT0,(_ciaa+ciapra).l
 		beq.b	2$
 		; Disable all DMAs.
 		move.w	#$7FFF,($096,a6)    ; ~DMAF_SETCLR,(dmacon,_custom)
