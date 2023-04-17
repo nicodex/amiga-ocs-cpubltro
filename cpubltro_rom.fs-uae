@@ -1,6 +1,4 @@
 #!/usr/bin/env fs-uae
-# SPDX-FileCopyrightText: 2023 Nico Bendlin <nico@nicode.net>
-# SPDX-License-Identifier: CC0-1.0
 
 [fs-uae]
 amiga_model = A500

@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2023 Nico Bendlin <nico@nicode.net>
-# SPDX-License-Identifier: CC0-1.0
-
 # GNU Make: <https://www.gnu.org/software/make/>
 # vasm    : <http://www.compilers.de/vasm.html>
 # romtool : <https://pypi.org/project/amitools/>

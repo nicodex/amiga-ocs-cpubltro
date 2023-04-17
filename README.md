@@ -55,8 +55,7 @@ This work is public domain and licensed under the [CC0 1.0 Universal] license.
 - [TLDRLegal: CC0 1.0 Universal](https://www.tldrlegal.com/license/creative-commons-cc0-1-0-universal)
 - [gnu.org/licenses: CC0 1.0 Universal](https://www.gnu.org/licenses/license-list.html#CC0)
 
-This project attempts to conform to the [REUSE] recommendations,
-so you should find license information in/for all project files.
+This project attempts to conform to the [REUSE] recommendations.
 
 [CC0 1.0 Universal]: LICENSES/CC0-1.0.txt
 [REUSE]: https://reuse.software/
