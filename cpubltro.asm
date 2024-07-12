@@ -6,7 +6,7 @@
 ;
 ;	Target:
 ;	  - Chipset with 7-bitplane anomaly (ICS, OCS, ECS)
-;	    (Agnus 4-bitplane DMAs, Denise 6-bitplane DMAs,
+;	    (Agnus 4-bitplane DMAs, Denise 6-bitplane draw,
 ;	    BPL5DAT/BPL6DAT can/have to be filled with CPU)
 ;	  - Motorola 68000/68010 CPU @ 7 MHz (fixed timing)
 ;	  - PAL on reset (NTSC possible, but needs rewrite)
@@ -152,7 +152,7 @@ RomEntry:
 ;   (expected to be unused by Amiga hardware), the reset impact is minimized
 ;   (Kickstart will try to find/reuse the previous exec.library after reset).
 ;
-;   This project does not want to write to anything the chipset registers.
+;   This project does not want to write to anything but chipset registers.
 ;   Therefore, the stack will/cannot be used at all.
 ;
 ;   Special case: The Non-Maskable Interrupt (NMI) cannot be suppressed, and

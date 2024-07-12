@@ -4,10 +4,11 @@ Amiga CPU Blit Read-Only (Proof of Concept ROM)
 Testing CPU drawing without _any_ memory writes.
 
 Target:  
-  - PAL OCS/ECS with 7(4+2)-bitplane anomaly
-    (Agnus: 4-bitplane DMAs, Denise: 6-bitplane EHB,
-    last two bitplane data is written with the CPU).
-  - Motorola 68000/68010 CPU @ 7 MHz
+  - Chipset with 7-bitplane anomaly (ICS, OCS, ECS)
+    (Agnus 4-bitplane DMAs, Denise 6-bitplane draw,
+    BPL5DAT/BPL6DAT can/have to be filled with CPU)
+  - Motorola 68000/68010 CPU @ 7 MHz (fixed timing)
+  - PAL on reset (NTSC possible, but needs rewrite)
 
 The current research state fills a 352x280 screen with two bitplanes
 (two colors and their half-bright variants) completely with the CPU.
