@@ -7,40 +7,58 @@ VASM ?= $(AMIGA_TOOLCHAIN)/bin/vasmm68k_mot
 VASM_OPTS ?= -quiet -wfail -x
 ROMTOOL ?= /usr/bin/env romtool
 WINE ?= /usr/bin/env wine
-WINUAE_ZIP ?= WinUAE5000.zip
+WINUAE_ZIP ?= WinUAE5300.zip
 WINUAE_URL ?= https://download.abime.net/winuae/releases/$(WINUAE_ZIP)
 
-all: cpubltro.rom cpubltro.adf
+all: cpubltro-0fc.rom cpubltro-a1k.adf cpubltro-0f8.rom cpubltro-0f8.bin
 
-.PHONY: all clean check test
+.PHONY: all clean distclean check check1 check2 test test1
 
-cpubltro_img.i: cpubltro_img.png
-	python3 cpubltro_img.py
+cpubltro.i: cpubltro.png
+	python3 cpubltro.py
 
-cpubltro.rom : cpubltro_rom.asm cpubltro_img.i
-	$(VASM) -Fbin $(VASM_OPTS) -o $@ $<
+cpubltro-0fc.rom : cpubltro.asm cpubltro.i
+	$(VASM) -Fbin -DROM_SIZE=262144 $(VASM_OPTS) -o $@ $<
 	-$(ROMTOOL) copy --fix-checksum $@ $@
 
-cpubltro.adf : cpubltro_adf.asm cpubltro.rom
+cpubltro-a1k.adf : cpubltro-a1k.asm cpubltro-0fc.rom
 	$(VASM) -Fbin $(VASM_OPTS) -o $@ $<
 
-clean:
-	rm -f cpubltro_img.i
-	rm -f cpubltro.rom
-	rm -f cpubltro.adf
+cpubltro-0f8.rom : cpubltro.asm cpubltro.i
+	$(VASM) -Fbin -DROM_SIZE=524288 $(VASM_OPTS) -o $@ $<
+	-$(ROMTOOL) copy --fix-checksum $@ $@
 
-check: cpubltro.rom
+cpubltro-0f8.bin: cpubltro-0f8.rom
+	dd conv=swab if=$< of=$@
+
+clean:
+	rm -f cpubltro.i
+	rm -f cpubltro-0fc.rom cpubltro-a1k.adf
+	rm -f cpubltro-0f8.rom cpubltro-0f8.bin
+
+distclean:
+	rm -rf .idea
+	rm -rf winuae
+
+check: check1 check2
+
+check1: cpubltro-0fc.rom
+	$(ROMTOOL) info $<
+
+check2: cpubltro-0f8.rom
 	$(ROMTOOL) info $<
 
 winuae/$(WINUAE_ZIP):
-	(mkdir -p winuae && cd winuae && wget $(WINUAE_URL))
+	mkdir -p winuae && cd winuae && wget $(WINUAE_URL)
 
 winuae/winuae.exe: | winuae/$(WINUAE_ZIP)
-	(cd winuae && unzip $(WINUAE_ZIP))
+	cd winuae && unzip $(WINUAE_ZIP)
 
-test: cpubltro.rom | winuae/winuae.exe
-	$(WINE) winuae/winuae.exe -s use_gui=false \
-		-s kickstart_rom_file=../cpubltro.rom \
+test: test1
+
+test1: cpubltro-0fc.rom | winuae/winuae.exe
+	cd winuae && $(WINE) winuae.exe -s use_gui=false \
+		-s kickstart_rom_file="Z:$(subst /,\,$(abspath $<))" \
 		-s boot_rom_uae=disabled \
 		-s ntsc=false \
 		-s genlock=false \

@@ -3,8 +3,8 @@
 import png
 import sys
 
-ASM_FILENAME = 'cpubltro_img.i'
-IMG_FILENAME = 'cpubltro_img.png'
+ASM_FILENAME = 'cpubltro.i'
+IMG_FILENAME = 'cpubltro.png'
 DISPL_VPOS = 0x1C # first display line (only for ASM comments)
 DISPL_HPOS = 0x38 # first BPL1DAT write (only for ASM comments)
 ASM_LENGTH = (1 + 20 + 1) # words

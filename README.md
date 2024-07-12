@@ -14,11 +14,17 @@ The current research state fills a 352x280 screen with two bitplanes
 While more vertical lines are possible, the 352 horizontal pixels are
 the maximum (there are no cycles left for any HPOS synchronization).
 
-If all works as expected, the main screen looks like this:  
-![Amiga CPU Blit Read-Only - main screen image](cpubltro_img.png)
+Release files:  
+  - [cpubltro-a1k.adf](cpubltro-a1k.adf) Kickstart disk (Amiga 1000)
+  - [cpubltro-0fc.rom](cpubltro-0fc.rom) 256K ROM image (MapROM or emulator)
+  - [cpubltro-0f8.rom](cpubltro-0f8.rom) 512K ROM image (MapROM or emulator)
+  - [cpubltro-0f8.bin](cpubltro-0f8.bin) 512K byte swapped ROM image (EPROM)
+
+If all works as expected, the screen looks like this:  
+![Amiga CPU Blit Read-Only - main screen image](cpubltro.png)
 
 |   blit |                VPOS | VPOS + 1                                                                             |
-| ------:| -------------------:|:------------------------------------------------------------------------------------ |
+|-------:|--------------------:|:-------------------------------------------------------------------------------------|
 |  Agnus | `DDDDDDDDDDDDEEE00` | `0000000000000011111111111111112222222222222222333333333333333344444444444444445555` |
 |   HPOS | `456789ABCDEF01201` | `23456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123` |
 | Denise | `DDDDDDDDDDDDDDDDE` | `EE00000000000000001111111111111111222222222222222233333333333333334444444444444444` |
@@ -29,7 +35,7 @@ If all works as expected, the main screen looks like this:
 |  MoveA | `______.R.r.W.w.p_` | `________________________________________________________.R.r.W.w.p______.R.r.W.w.p` |
 
 | slot    | description                                                |
-|:------- |:---------------------------------------------------------- |
+|:--------|:-----------------------------------------------------------|
 | `M`     | DMA memory refresh channel (RGA used for video sync codes) |
 | `d`     | DMA disk channel (custom.dskdatr/dskdat: disabled)         |
 | `s`     | DMA sprite channels (custom.spr.dataa/datab: disabled)     |
@@ -48,7 +54,8 @@ since the Agnus HPOS (VHPOSR register) is off by +4 color clocks
 from the Denise HPOS. However, the memory refresh DMA slots, that
 are always used, help synchronizing the CPU fetches.
 
-DMA Time Slot Allocation / Horizontal Line (Amiga Hardware Reference Manual):  
+DMA Time Slot Allocation / Horizontal Line
+(Amiga Hardware Reference Manual - edited/fixed):  
 ![DMA Time Slot Allocation / Horizontal Line](dmasloth.png)
 
 
@@ -58,8 +65,10 @@ Notes
 Comments, bugfixes, and tests on real hardware are very welcome.
 
 Emulation requires a very accurate CPU/DMA simulation, e.g.:  
-  - [WinUAE](https://www.winuae.net/download/) 5.0.0 (Windows/Wine)
+  - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (Windows/Wine)
   - [vAmiga.net](https://vamiganet.github.io/) (vAmiga online version)
+
+![Amiga 500 without DRAM, CIAs, and Paula](README.png)
 
 For the previous research state (a simple loop counter), have a look at
 [v0.1](https://github.com/nicodex/amiga-ocs-cpubltro/releases/tag/v0.1).
