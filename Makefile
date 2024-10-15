@@ -14,8 +14,8 @@ all: cpubltro-0fc.rom cpubltro-a1k.adf cpubltro-0f8.rom cpubltro-0f8.bin
 
 .PHONY: all clean distclean check check1 check2 test test1
 
-cpubltro.i: cpubltro.png
-	python3 cpubltro.py
+cpubltro.i: cpubltro.py cpubltro.png
+	python3 $<
 
 cpubltro-0fc.rom : cpubltro.asm cpubltro.i
 	$(VASM) -Fbin -DROM_SIZE=262144 $(VASM_OPTS) -o $@ $<
