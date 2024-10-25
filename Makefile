@@ -39,6 +39,7 @@ clean:
 distclean:
 	rm -rf .idea
 	rm -rf winuae
+	rm -f cpubltro.i
 
 check: check1 check2
 
