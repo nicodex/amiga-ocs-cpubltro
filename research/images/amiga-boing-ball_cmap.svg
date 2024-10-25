@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--
+SPDX-FileCopyrightText: 2024 Nico Bendlin <nico@nicode.net>
+SPDX-License-Identifier: CC0-1.0
+-->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 135 118" preserveAspectRatio="xMinYMin" width="135px" height="118px">
+  <title>Amiga Boing! ball (color index map)</title>
+  <style>
+circle, path, rect {
+  shape-rendering: geometricPrecision;
+}
+  </style>
+  <defs>
+    <path id="l1" d="M 56,0 a 56.000000000000000,56 0,0,0 0,112 A 55.801843670586672,56 0,0,1 56,0 z" />
+    <path id="l2" d="M 56,0 a 55.911901640997727,56 0,0,0 0,112 A 55.450143018840953,56 0,0,1 56,0 z" />
+    <path id="l3" d="M 56,0 a 55.647883754021585,56 0,0,0 0,112 A 54.923975702580905,56 0,0,1 56,0 z" />
+    <path id="l4" d="M 56,0 a 55.208777037021209,56 0,0,0 0,112 A 54.224997238846641,56 0,0,1 56,0 z" />
+    <path id="l5" d="M 56,0 a 54.595963082182122,56 0,0,0 0,112 A 53.355406872482192,56 0,0,1 56,0 z" />
+    <path id="l6" d="M 56,0 a 53.811370028925574,56 0,0,0 0,112 A 52.317940656497592,56 0,0,1 56,0 z" />
+    <path id="l7" d="M 56,0 a 52.857466497268584,56 0,0,0 0,112 A 51.115862843433859,56 0,0,1 56,0 z" />
+    <path id="l8" d="M 56,0 a 51.737253820632058,56 0,0,0 0,112 A 49.752955614816849,56 0,0,1 56,0 z" />
+    <path id="l9" d="M 56,0 a 50.454256602535471,56 0,0,0 0,112 A 48.233507181014901,56 0,0,1 56,0 z" />
+    <path id="lA" d="M 56,0 a 49.012511626890207,56 0,0,0 0,112 A 46.562298288942533,56 0,0,1 56,0 z" />
+    <path id="lB" d="M 56,0 a 47.416555156783913,56 0,0,0 0,112 A 44.744587180061946,56 0,0,1 56,0 z" />
+    <path id="lC" d="M 56,0 a 45.671408661718570,56 0,0,0 0,112 A 42.786093046010016,56 0,0,1 56,0 z" />
+    <path id="lD" d="M 56,0 a 43.782563018209669,56 0,0,0 0,112 A 40.692978033905515,56 0,0,1 56,0 z" />
+    <path id="lE" d="M 56,0 a 41.755961233457274,56 0,0,0 0,112 A 38.471827857954491,56 0,0,1 56,0 z" />
+    <path id="lF" d="M 56,0 a 39.597979746446661,56 0,0,0 0,112 A 36.129631078356907,56 0,0,1 56,0 z" />
+    <path id="lG" d="M 56,0 a 37.315408365312221,56 0,0,0 0,112 A 33.673757112710725,56 0,0,1 56,0 z" />
+    <path id="lH" d="M 56,0 a 34.915428904089078,56 0,0,0 0,112 A 31.111933049097725,56 0,0,1 56,0 z" />
+    <path id="lI" d="M 56,0 a 32.405592586069122,56 0,0,0 0,112 A 28.452219333805650,56 0,0,1 56,0 z" />
+    <path id="lJ" d="M 56,0 a 29.793796284858848,56 0,0,0 0,112 A 25.702984410182110,56 0,0,1 56,0 z" />
+    <path id="lK" d="M 56,0 a 27.088257677893428,56 0,0,0 0,112 A 22.872878388415784,56 0,0,1 56,0 z" />
+    <path id="lL" d="M 56,0 a 24.297489390583255,56 0,0,0 0,112 A 19.970805829089529,56 0,0,1 56,0 z" />
+    <path id="lM" d="M 56,0 a 21.430272212445027,56 0,0,0 0,112 A 17.005897726138425,56 0,0,1 56,0 z" />
+    <path id="lN" d="M 56,0 a 18.495627469489357,56 0,0,0 0,112 A 13.987482777364704,56 0,0,1 56,0 z" />
+    <path id="lO" d="M 56,0 a 15.502788639791566,56 0,0,0 0,112 A 10.925058032903183,56 0,0,1 56,0 z" />
+    <path id="lP" d="M 56,0 a 12.461172301553607,56 0,0,0 0,112 A 7.8282590139879708,56 0,0,1 56,0 z" />
+    <path id="lQ" d="M 56,0 a 9.3803485050652389,56 0,0,0 0,112 A 4.7068293960378625,56 0,0,1 56,0 z" />
+    <path id="lR" d="M 56,0 a 6.2700106617852401,56 0,0,0 0,112 A 1.5705903514486617,56 0,0,1 56,0 z" />
+    <path id="lS" d="M 56,0 a 3.1399450452827401,56 0,0,0 0,112 A .78537241571949516,56 0 0 0 56,0 z" />
+    <path id="rS" d="M 56,0 v                               112 A 3.1399450452827401,56 0 0 0 56,0 z" />
+    <path id="rR" d="M 56,0 a 1.5705903514486617,56 0,0,1 0,112 A 6.2700106617852401,56 0,0,0 56,0 z" />
+    <path id="rQ" d="M 56,0 a 4.7068293960378625,56 0,0,1 0,112 A 9.3803485050652389,56 0,0,0 56,0 z" />
+    <path id="rP" d="M 56,0 a 7.8282590139879708,56 0,0,1 0,112 A 12.461172301553607,56 0,0,0 56,0 z" />
+    <path id="rO" d="M 56,0 a 10.925058032903183,56 0,0,1 0,112 A 15.502788639791566,56 0,0,0 56,0 z" />
+    <path id="rN" d="M 56,0 a 13.987482777364704,56 0,0,1 0,112 A 18.495627469489357,56 0,0,0 56,0 z" />
+    <path id="rM" d="M 56,0 a 17.005897726138425,56 0,0,1 0,112 A 21.430272212445027,56 0,0,0 56,0 z" />
+    <path id="rL" d="M 56,0 a 19.970805829089529,56 0,0,1 0,112 A 24.297489390583255,56 0,0,0 56,0 z" />
+    <path id="rK" d="M 56,0 a 22.872878388415784,56 0,0,1 0,112 A 27.088257677893428,56 0,0,0 56,0 z" />
+    <path id="rJ" d="M 56,0 a 25.702984410182110,56 0,0,1 0,112 A 29.793796284858848,56 0,0,0 56,0 z" />
+    <path id="rI" d="M 56,0 a 28.452219333805650,56 0,0,1 0,112 A 32.405592586069122,56 0,0,0 56,0 z" />
+    <path id="rH" d="M 56,0 a 31.111933049097725,56 0,0,1 0,112 A 34.915428904089078,56 0,0,0 56,0 z" />
+    <path id="rG" d="M 56,0 a 33.673757112710725,56 0,0,1 0,112 A 37.315408365312221,56 0,0,0 56,0 z" />
+    <path id="rF" d="M 56,0 a 36.129631078356907,56 0,0,1 0,112 A 39.597979746446661,56 0,0,0 56,0 z" />
+    <path id="rE" d="M 56,0 a 38.471827857954491,56 0,0,1 0,112 A 41.755961233457274,56 0,0,0 56,0 z" />
+    <path id="rD" d="M 56,0 a 40.692978033905515,56 0,0,1 0,112 A 43.782563018209669,56 0,0,0 56,0 z" />
+    <path id="rC" d="M 56,0 a 42.786093046010016,56 0,0,1 0,112 A 45.671408661718570,56 0,0,0 56,0 z" />
+    <path id="rB" d="M 56,0 a 44.744587180061946,56 0,0,1 0,112 A 47.416555156783913,56 0,0,0 56,0 z" />
+    <path id="rA" d="M 56,0 a 46.562298288942533,56 0,0,1 0,112 A 49.012511626890207,56 0,0,0 56,0 z" />
+    <path id="r9" d="M 56,0 a 48.233507181014901,56 0,0,1 0,112 A 50.454256602535471,56 0,0,0 56,0 z" />
+    <path id="r8" d="M 56,0 a 49.752955614816849,56 0,0,1 0,112 A 51.737253820632058,56 0,0,0 56,0 z" />
+    <path id="r7" d="M 56,0 a 51.115862843433859,56 0,0,1 0,112 A 52.857466497268584,56 0,0,0 56,0 z" />
+    <path id="r6" d="M 56,0 a 52.317940656497592,56 0,0,1 0,112 A 53.811370028925574,56 0,0,0 56,0 z" />
+    <path id="r5" d="M 56,0 a 53.355406872482192,56 0,0,1 0,112 A 54.595963082182122,56 0,0,0 56,0 z" />
+    <path id="r4" d="M 56,0 a 54.224997238846641,56 0,0,1 0,112 A 55.208777037021209,56 0,0,0 56,0 z" />
+    <path id="r3" d="M 56,0 a 54.923975702580905,56 0,0,1 0,112 A 55.647883754021585,56 0,0,0 56,0 z" />
+    <path id="r2" d="M 56,0 a 55.450143018840953,56 0,0,1 0,112 A 55.911901640997727,56 0,0,0 56,0 z" />
+    <path id="r1" d="M 56,0 a 55.801843670586672,56 0,0,1 0,112 A 56.000000000000000,56 0,0,0 56,0 z" />
+    <clipPath id="co">
+      <path d="M 0,0.0000000000000000 H 112 V 4.2627461793679417 H 0 z"/>
+      <path d="M 0,16.402020253553339 H 112 V 34.569727787554973 H 0 z"/>
+      <path d="M 0,56.000000000000000 H 112 V 77.430272212445027 H 0 z"/>
+      <path d="M 0,95.597979746446661 H 112 V 107.73725382063206 H 0 z"/>
+    </clipPath>
+    <clipPath id="ce">
+      <path d="M 0,4.2627461793679417 H 112 V 16.402020253553339 H 0 z"/>
+      <path d="M 0,34.569727787554973 H 112 V 56.000000000000000 H 0 z"/>
+      <path d="M 0,77.430272212445027 H 112 V 95.597979746446661 H 0 z"/>
+      <path d="M 0,107.73725382063206 H 112 V 112.00000000000000 H 0 z"/>
+    </clipPath>
+  </defs>
+  <rect id="background" width="100%" height="100%" fill="#000"/>
+  <circle id="shadow" cx="76" cy="59" r="59" fill="#111"/>
+  <g id="ball" transform="translate(0 4)">
+    <g transform="rotate(18.434948822922011 56 56)">
+      <use xlink:href="#l1" clip-path="url(#co)" fill="#FFF"/><use xlink:href="#l1" clip-path="url(#ce)" fill="#888"/>
+      <use xlink:href="#l2" clip-path="url(#co)" fill="#EEE"/><use xlink:href="#l2" clip-path="url(#ce)" fill="#777"/>
+      <use xlink:href="#l3" clip-path="url(#co)" fill="#DDD"/><use xlink:href="#l3" clip-path="url(#ce)" fill="#666"/>
+      <use xlink:href="#l4" clip-path="url(#co)" fill="#CCC"/><use xlink:href="#l4" clip-path="url(#ce)" fill="#555"/>
+      <use xlink:href="#l5" clip-path="url(#co)" fill="#BBB"/><use xlink:href="#l5" clip-path="url(#ce)" fill="#444"/>
+      <use xlink:href="#l6" clip-path="url(#co)" fill="#AAA"/><use xlink:href="#l6" clip-path="url(#ce)" fill="#333"/>
+      <use xlink:href="#l7" clip-path="url(#co)" fill="#999"/><use xlink:href="#l7" clip-path="url(#ce)" fill="#222"/>
+      <use xlink:href="#l8" clip-path="url(#co)" fill="#888"/><use xlink:href="#l8" clip-path="url(#ce)" fill="#FFF"/>
+      <use xlink:href="#l9" clip-path="url(#co)" fill="#777"/><use xlink:href="#l9" clip-path="url(#ce)" fill="#EEE"/>
+      <use xlink:href="#lA" clip-path="url(#co)" fill="#666"/><use xlink:href="#lA" clip-path="url(#ce)" fill="#DDD"/>
+      <use xlink:href="#lB" clip-path="url(#co)" fill="#555"/><use xlink:href="#lB" clip-path="url(#ce)" fill="#CCC"/>
+      <use xlink:href="#lC" clip-path="url(#co)" fill="#444"/><use xlink:href="#lC" clip-path="url(#ce)" fill="#BBB"/>
+      <use xlink:href="#lD" clip-path="url(#co)" fill="#333"/><use xlink:href="#lD" clip-path="url(#ce)" fill="#AAA"/>
+      <use xlink:href="#lE" clip-path="url(#co)" fill="#222"/><use xlink:href="#lE" clip-path="url(#ce)" fill="#999"/>
+      <use xlink:href="#lF" clip-path="url(#co)" fill="#FFF"/><use xlink:href="#lF" clip-path="url(#ce)" fill="#888"/>
+      <use xlink:href="#lG" clip-path="url(#co)" fill="#EEE"/><use xlink:href="#lG" clip-path="url(#ce)" fill="#777"/>
+      <use xlink:href="#lH" clip-path="url(#co)" fill="#DDD"/><use xlink:href="#lH" clip-path="url(#ce)" fill="#666"/>
+      <use xlink:href="#lI" clip-path="url(#co)" fill="#CCC"/><use xlink:href="#lI" clip-path="url(#ce)" fill="#555"/>
+      <use xlink:href="#lJ" clip-path="url(#co)" fill="#BBB"/><use xlink:href="#lJ" clip-path="url(#ce)" fill="#444"/>
+      <use xlink:href="#lK" clip-path="url(#co)" fill="#AAA"/><use xlink:href="#lK" clip-path="url(#ce)" fill="#333"/>
+      <use xlink:href="#lL" clip-path="url(#co)" fill="#999"/><use xlink:href="#lL" clip-path="url(#ce)" fill="#222"/>
+      <use xlink:href="#lM" clip-path="url(#co)" fill="#888"/><use xlink:href="#lM" clip-path="url(#ce)" fill="#FFF"/>
+      <use xlink:href="#lN" clip-path="url(#co)" fill="#777"/><use xlink:href="#lN" clip-path="url(#ce)" fill="#EEE"/>
+      <use xlink:href="#lO" clip-path="url(#co)" fill="#666"/><use xlink:href="#lO" clip-path="url(#ce)" fill="#DDD"/>
+      <use xlink:href="#lP" clip-path="url(#co)" fill="#555"/><use xlink:href="#lP" clip-path="url(#ce)" fill="#CCC"/>
+      <use xlink:href="#lQ" clip-path="url(#co)" fill="#444"/><use xlink:href="#lQ" clip-path="url(#ce)" fill="#BBB"/>
+      <use xlink:href="#lR" clip-path="url(#co)" fill="#333"/><use xlink:href="#lR" clip-path="url(#ce)" fill="#AAA"/>
+      <use xlink:href="#lS" clip-path="url(#co)" fill="#222"/><use xlink:href="#lS" clip-path="url(#ce)" fill="#999"/>
+      <use xlink:href="#r1" clip-path="url(#co)" fill="#222"/><use xlink:href="#r1" clip-path="url(#ce)" fill="#999"/>
+      <use xlink:href="#r2" clip-path="url(#co)" fill="#333"/><use xlink:href="#r2" clip-path="url(#ce)" fill="#AAA"/>
+      <use xlink:href="#r3" clip-path="url(#co)" fill="#444"/><use xlink:href="#r3" clip-path="url(#ce)" fill="#BBB"/>
+      <use xlink:href="#r4" clip-path="url(#co)" fill="#555"/><use xlink:href="#r4" clip-path="url(#ce)" fill="#CCC"/>
+      <use xlink:href="#r5" clip-path="url(#co)" fill="#666"/><use xlink:href="#r5" clip-path="url(#ce)" fill="#DDD"/>
+      <use xlink:href="#r6" clip-path="url(#co)" fill="#777"/><use xlink:href="#r6" clip-path="url(#ce)" fill="#EEE"/>
+      <use xlink:href="#r7" clip-path="url(#co)" fill="#888"/><use xlink:href="#r7" clip-path="url(#ce)" fill="#FFF"/>
+      <use xlink:href="#r8" clip-path="url(#co)" fill="#999"/><use xlink:href="#r8" clip-path="url(#ce)" fill="#222"/>
+      <use xlink:href="#r9" clip-path="url(#co)" fill="#AAA"/><use xlink:href="#r9" clip-path="url(#ce)" fill="#333"/>
+      <use xlink:href="#rA" clip-path="url(#co)" fill="#BBB"/><use xlink:href="#rA" clip-path="url(#ce)" fill="#444"/>
+      <use xlink:href="#rB" clip-path="url(#co)" fill="#CCC"/><use xlink:href="#rB" clip-path="url(#ce)" fill="#555"/>
+      <use xlink:href="#rC" clip-path="url(#co)" fill="#DDD"/><use xlink:href="#rC" clip-path="url(#ce)" fill="#666"/>
+      <use xlink:href="#rD" clip-path="url(#co)" fill="#EEE"/><use xlink:href="#rD" clip-path="url(#ce)" fill="#777"/>
+      <use xlink:href="#rE" clip-path="url(#co)" fill="#FFF"/><use xlink:href="#rE" clip-path="url(#ce)" fill="#888"/>
+      <use xlink:href="#rF" clip-path="url(#co)" fill="#222"/><use xlink:href="#rF" clip-path="url(#ce)" fill="#999"/>
+      <use xlink:href="#rG" clip-path="url(#co)" fill="#333"/><use xlink:href="#rG" clip-path="url(#ce)" fill="#AAA"/>
+      <use xlink:href="#rH" clip-path="url(#co)" fill="#444"/><use xlink:href="#rH" clip-path="url(#ce)" fill="#BBB"/>
+      <use xlink:href="#rI" clip-path="url(#co)" fill="#555"/><use xlink:href="#rI" clip-path="url(#ce)" fill="#CCC"/>
+      <use xlink:href="#rJ" clip-path="url(#co)" fill="#666"/><use xlink:href="#rJ" clip-path="url(#ce)" fill="#DDD"/>
+      <use xlink:href="#rK" clip-path="url(#co)" fill="#777"/><use xlink:href="#rK" clip-path="url(#ce)" fill="#EEE"/>
+      <use xlink:href="#rL" clip-path="url(#co)" fill="#888"/><use xlink:href="#rL" clip-path="url(#ce)" fill="#FFF"/>
+      <use xlink:href="#rM" clip-path="url(#co)" fill="#999"/><use xlink:href="#rM" clip-path="url(#ce)" fill="#222"/>
+      <use xlink:href="#rN" clip-path="url(#co)" fill="#AAA"/><use xlink:href="#rN" clip-path="url(#ce)" fill="#333"/>
+      <use xlink:href="#rO" clip-path="url(#co)" fill="#BBB"/><use xlink:href="#rO" clip-path="url(#ce)" fill="#444"/>
+      <use xlink:href="#rP" clip-path="url(#co)" fill="#CCC"/><use xlink:href="#rP" clip-path="url(#ce)" fill="#555"/>
+      <use xlink:href="#rQ" clip-path="url(#co)" fill="#DDD"/><use xlink:href="#rQ" clip-path="url(#ce)" fill="#666"/>
+      <use xlink:href="#rR" clip-path="url(#co)" fill="#EEE"/><use xlink:href="#rR" clip-path="url(#ce)" fill="#777"/>
+      <use xlink:href="#rS" clip-path="url(#co)" fill="#FFF"/><use xlink:href="#rS" clip-path="url(#ce)" fill="#888"/>
+    </g>
+  </g>
+</svg>

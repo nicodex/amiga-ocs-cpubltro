@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!--
+SPDX-FileCopyrightText: 2024 Nico Bendlin <nico@nicode.net>
+SPDX-License-Identifier: CC0-1.0
+-->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 112 112" preserveAspectRatio="xMinYMin" width="112px" height="112px">
+  <title>Amiga Boing! ball animation</title>
+  <desc>Color-map animated Amiga Boing! ball from the Workbench Demos disk (1985-08-22)</desc>
+  <style>
+circle, path { shape-rendering: optimizeSpeed; }
+@keyframes k2 { 0.000000000000000000000% { fill: #FDD; } 7.142857142857142857143% { fill: #FFF; } 50.00000000000000000000% { fill: #F00; } }
+@keyframes k3 { 0.000000000000000000000% { fill: #FFF; } 42.85714285714285714286% { fill: #F00; } 92.85714285714285714286% { fill: #FDD; } }
+@keyframes k4 { 35.71428571428571428571% { fill: #F00; } 85.71428571428571428571% { fill: #FDD; } 92.85714285714285714286% { fill: #FFF; } }
+@keyframes k5 { 28.57142857142857142857% { fill: #F00; } 78.57142857142857142857% { fill: #FDD; } 85.71428571428571428571% { fill: #FFF; } }
+@keyframes k6 { 21.42857142857142857143% { fill: #F00; } 71.42857142857142857143% { fill: #FDD; } 78.57142857142857142857% { fill: #FFF; } }
+@keyframes k7 { 14.28571428571428571429% { fill: #F00; } 64.28571428571428571429% { fill: #FDD; } 71.42857142857142857143% { fill: #FFF; } }
+@keyframes k8 { 7.142857142857142857143% { fill: #F00; } 57.14285714285714285714% { fill: #FDD; } 64.28571428571428571429% { fill: #FFF; } }
+@keyframes k9 { 0.000000000000000000000% { fill: #F00; } 50.00000000000000000000% { fill: #FDD; } 57.14285714285714285714% { fill: #FFF; } }
+@keyframes kA { 42.85714285714285714286% { fill: #FDD; } 50.00000000000000000000% { fill: #FFF; } 92.85714285714285714286% { fill: #F00; } }
+@keyframes kB { 35.71428571428571428571% { fill: #FDD; } 42.85714285714285714286% { fill: #FFF; } 85.71428571428571428571% { fill: #F00; } }
+@keyframes kC { 28.57142857142857142857% { fill: #FDD; } 35.71428571428571428571% { fill: #FFF; } 78.57142857142857142857% { fill: #F00; } }
+@keyframes kD { 21.42857142857142857143% { fill: #FDD; } 28.57142857142857142857% { fill: #FFF; } 71.42857142857142857143% { fill: #F00; } }
+@keyframes kE { 14.28571428571428571429% { fill: #FDD; } 21.42857142857142857143% { fill: #FFF; } 64.28571428571428571429% { fill: #F00; } }
+@keyframes kF { 7.142857142857142857143% { fill: #FDD; } 14.28571428571428571429% { fill: #FFF; } 57.14285714285714285714% { fill: #F00; } }
+.c2 { animation: k2 466ms step-end infinite; }
+.c3 { animation: k3 466ms step-end infinite; }
+.c4 { animation: k4 466ms step-end infinite; }
+.c5 { animation: k5 466ms step-end infinite; }
+.c6 { animation: k6 466ms step-end infinite; }
+.c7 { animation: k7 466ms step-end infinite; }
+.c8 { animation: k8 466ms step-end infinite; }
+.c9 { animation: k9 466ms step-end infinite; }
+.cA { animation: kA 466ms step-end infinite; }
+.cB { animation: kB 466ms step-end infinite; }
+.cC { animation: kC 466ms step-end infinite; }
+.cD { animation: kD 466ms step-end infinite; }
+.cE { animation: kE 466ms step-end infinite; }
+.cF { animation: kF 466ms step-end infinite; }
+  </style>
+  <defs>
+    <path id="a01" d="M56,0A56,56 0 0 0 56,112 55.80184367058667220567,56 0 0 1 56,0Z"/>
+    <path id="a02" d="M56,112A55.91190164099772747936,56 0 0 1 56,0 55.45014301884095306482,56 0 0 0 56,112Z"/>
+    <path id="a03" d="M56,0A55.64788375402158467786,56 0 0 0 56,112 54.92397570258090515107,56 0 0 1 56,0Z"/>
+    <path id="a04" d="M56,112A55.20877703702120893974,56 0 0 1 56,0 54.22499723884664060599,56 0 0 0 56,112Z"/>
+    <path id="a05" d="M56,0A54.59596308218212199302,56 0 0 0 56,112 53.35540687248219222107,56 0 0 1 56,0Z"/>
+    <path id="a06" d="M56,112A53.81137002892557441987,56 0 0 1 56,0 52.3179406564975918842,56 0 0 0 56,112Z"/>
+    <path id="a07" d="M56,0A52.85746649726858352213,56 0 0 0 56,112 51.11586284343385889974,56 0 0 1 56,0Z"/>
+    <path id="a08" d="M56,112A51.73725382063205834318,56 0 0 1 56,0 49.75295561481684881716,56 0 0 0 56,112Z"/>
+    <path id="a09" d="M56,0A50.45425660253547106922,56 0 0 0 56,112 48.23350718101490069583,56 0 0 1 56,0Z"/>
+    <path id="a10" d="M56,112A49.01251162689020706027,56 0 0 1 56,0 46.56229828894253327641,56 0 0 0 56,112Z"/>
+    <path id="a11" d="M56,0A47.41655515678391342776,56 0 0 0 56,112 44.74458718006194589946,56 0 0 1 56,0Z"/>
+    <path id="a12" d="M56,112A45.67140866171856959557,56 0 0 1 56,0 42.78609304601001645287,56 0 0 0 56,112Z"/>
+    <path id="a13" d="M56,0A43.78256301820966928767,56 0 0 0 56,112 40.69297803390551464105,56 0 0 1 56,0Z"/>
+    <path id="a14" d="M56,112A41.75596123345727413119,56 0 0 1 56,0 38.47182785795449147802,56 0 0 0 56,112Z"/>
+    <path id="a15" d="M56,0A39.59797974644666136645,56 0 0 0 56,112 36.12963107835690746433,56 0 0 1 56,0Z"/>
+    <path id="a16" d="M56,112A37.31540836531222095264,56 0 0 1 56,0 33.67375711271072526149,56 0 0 0 56,112Z"/>
+    <path id="a17" d="M56,0A34.9154289040890777094,56 0 0 0 56,112 31.1119330490977245856,56 0 0 1 56,0Z"/>
+    <path id="a18" d="M56,112A32.40559258606912153156,56 0 0 1 56,0 28.4522193338056496784,56 0 0 0 56,112Z"/>
+    <path id="a19" d="M56,0A29.79379628485884755923,56 0 0 0 56,112 25.7029844101821101563,56 0 0 1 56,0Z"/>
+    <path id="a20" d="M56,112A27.08825767789342829999,56 0 0 1 56,0 22.87287838841578358568,56 0 0 0 56,112Z"/>
+    <path id="a21" d="M56,0A24.29748939058325474664,56 0 0 0 56,112 19.97080582908952936392,56 0 0 1 56,0Z"/>
+    <path id="a22" d="M56,112A21.43027221244502721679,56 0 0 1 56,0 17.00589772613842492539,56 0 0 0 56,112Z"/>
+    <path id="a23" d="M56,0A18.49562746948935657939,56 0 0 0 56,112 13.98748277736470359771,56 0 0 1 56,0Z"/>
+    <path id="a24" d="M56,112A15.50278863979156570707,56 0 0 1 56,0 10.9250580329031829995,56 0 0 0 56,112Z"/>
+    <path id="a25" d="M56,0A12.46117230155360664018,56 0 0 0 56,112 7.828259013987970763866,56 0 0 1 56,0Z"/>
+    <path id="a26" d="M56,112A9.380348505065238853043,56 0 0 1 56,0 4.706829396037862522863,56 0 0 0 56,112Z"/>
+    <path id="a27" d="M56,0A6.270010661785240074248,56 0 0 0 56,112 1.570590351448661669106,56 0 0 1 56,0Z"/>
+    <path id="a28" d="M56,112A3.13994504528274013868,56 0 0 1 56,0 .7853724157194951596386,56 0 0 1 56,112Z"/>
+    <path id="a29" d="M56,0V112A3.13994504528274013868,56 0 0 0 56,0Z"/>
+    <path id="a30" d="M56,112A1.570590351448661669106,56 0 0 0 56,0 6.270010661785240074248,56 0 0 1 56,112Z"/>
+    <path id="a31" d="M56,0A4.706829396037862522863,56 0 0 1 56,112 9.380348505065238853043,56 0 0 0 56,0Z"/>
+    <path id="a32" d="M56,112A7.828259013987970763866,56 0 0 0 56,0 12.46117230155360664018,56 0 0 1 56,112Z"/>
+    <path id="a33" d="M56,0A10.9250580329031829995,56 0 0 1 56,112 15.50278863979156570707,56 0 0 0 56,0Z"/>
+    <path id="a34" d="M56,112A13.98748277736470359771,56 0 0 0 56,0 18.49562746948935657939,56 0 0 1 56,112Z"/>
+    <path id="a35" d="M56,0A17.00589772613842492539,56 0 0 1 56,112 21.43027221244502721679,56 0 0 0 56,0Z"/>
+    <path id="a36" d="M56,112A19.97080582908952936392,56 0 0 0 56,0 24.29748939058325474664,56 0 0 1 56,112Z"/>
+    <path id="a37" d="M56,0A22.87287838841578358568,56 0 0 1 56,112 27.08825767789342829999,56 0 0 0 56,0Z"/>
+    <path id="a38" d="M56,112A25.7029844101821101563,56 0 0 0 56,0 29.79379628485884755923,56 0 0 1 56,112Z"/>
+    <path id="a39" d="M56,0A28.4522193338056496784,56 0 0 1 56,112 32.40559258606912153156,56 0 0 0 56,0Z"/>
+    <path id="a40" d="M56,112A31.1119330490977245856,56 0 0 0 56,0 34.9154289040890777094,56 0 0 1 56,112Z"/>
+    <path id="a41" d="M56,0A33.67375711271072526149,56 0 0 1 56,112 37.31540836531222095264,56 0 0 0 56,0Z"/>
+    <path id="a42" d="M56,112A36.12963107835690746433,56 0 0 0 56,0 39.59797974644666136645,56 0 0 1 56,112Z"/>
+    <path id="a43" d="M56,0A38.47182785795449147802,56 0 0 1 56,112 41.75596123345727413119,56 0 0 0 56,0Z"/>
+    <path id="a44" d="M56,112A40.69297803390551464105,56 0 0 0 56,0 43.78256301820966928767,56 0 0 1 56,112Z"/>
+    <path id="a45" d="M56,0A42.78609304601001645287,56 0 0 1 56,112 45.67140866171856959557,56 0 0 0 56,0Z"/>
+    <path id="a46" d="M56,112A44.74458718006194589946,56 0 0 0 56,0 47.41655515678391342776,56 0 0 1 56,112Z"/>
+    <path id="a47" d="M56,0A46.56229828894253327641,56 0 0 1 56,112 49.01251162689020706027,56 0 0 0 56,0Z"/>
+    <path id="a48" d="M56,112A48.23350718101490069583,56 0 0 0 56,0 50.45425660253547106922,56 0 0 1 56,112Z"/>
+    <path id="a49" d="M56,0A49.75295561481684881716,56 0 0 1 56,112 51.73725382063205834318,56 0 0 0 56,0Z"/>
+    <path id="a50" d="M56,112A51.11586284343385889974,56 0 0 0 56,0 52.85746649726858352213,56 0 0 1 56,112Z"/>
+    <path id="a51" d="M56,0A52.3179406564975918842,56 0 0 1 56,112 53.81137002892557441987,56 0 0 0 56,0Z"/>
+    <path id="a52" d="M56,112A53.35540687248219222107,56 0 0 0 56,0 54.59596308218212199302,56 0 0 1 56,112Z"/>
+    <path id="a53" d="M56,0A54.22499723884664060599,56 0 0 1 56,112 55.20877703702120893974,56 0 0 0 56,0Z"/>
+    <path id="a54" d="M56,112A54.92397570258090515107,56 0 0 0 56,0 55.64788375402158467786,56 0 0 1 56,112Z"/>
+    <path id="a55" d="M56,0A55.45014301884095306482,56 0 0 1 56,112 55.91190164099772747936,56 0 0 0 56,0Z"/>
+    <path id="a56" d="M56,112A55.80184367058667220567,56 0 0 0 56,0 56,56 0 0 1 56,112Z"/>
+    <clipPath id="o">
+      <path d="M0,0H112V4.262746179367941656822H0Z"/>
+      <path d="M0,16.40202025355333863355H112V34.56972778755497278321H0Z"/>
+      <path d="M0,56H112V77.43027221244502721679H0Z"/>
+      <path d="M0,95.59797974644666136645H112V107.7372538206320583432H0Z"/>
+    </clipPath>
+    <clipPath id="e">
+      <path d="M0,4.262746179367941656822H112V16.40202025355333863355H0Z"/>
+      <path d="M0,34.56972778755497278321H112V56H0Z"/>
+      <path d="M0,77.43027221244502721679H112V95.59797974644666136645H0Z"/>
+      <path d="M0,107.7372538206320583432H112V112H0Z"/>
+    </clipPath>
+  </defs>
+  <circle cx="56" cy="56" r="56" fill="white"/>
+  <g transform="rotate(18.30845166105265138672 56 56)">
+    <use xlink:href="#a01" clip-path="url(#o)" class="cF" fill="#F00"/>
+    <use xlink:href="#a01" clip-path="url(#e)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a56" clip-path="url(#o)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a56" clip-path="url(#e)" class="c9" fill="#F00"/>
+    <use xlink:href="#a02" clip-path="url(#o)" class="cE" fill="#F00"/>
+    <use xlink:href="#a02" clip-path="url(#e)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a55" clip-path="url(#o)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a55" clip-path="url(#e)" class="cA" fill="#F00"/>
+    <use xlink:href="#a03" clip-path="url(#o)" class="cD" fill="#F00"/>
+    <use xlink:href="#a03" clip-path="url(#e)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a54" clip-path="url(#o)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a54" clip-path="url(#e)" class="cB" fill="#F00"/>
+    <use xlink:href="#a04" clip-path="url(#o)" class="cC" fill="#F00"/>
+    <use xlink:href="#a04" clip-path="url(#e)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a53" clip-path="url(#o)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a53" clip-path="url(#e)" class="cC" fill="#F00"/>
+    <use xlink:href="#a05" clip-path="url(#o)" class="cB" fill="#F00"/>
+    <use xlink:href="#a05" clip-path="url(#e)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a52" clip-path="url(#o)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a52" clip-path="url(#e)" class="cD" fill="#F00"/>
+    <use xlink:href="#a06" clip-path="url(#o)" class="cA" fill="#F00"/>
+    <use xlink:href="#a06" clip-path="url(#e)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a51" clip-path="url(#o)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a51" clip-path="url(#e)" class="cE" fill="#F00"/>
+    <use xlink:href="#a07" clip-path="url(#o)" class="c9" fill="#F00"/>
+    <use xlink:href="#a07" clip-path="url(#e)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a50" clip-path="url(#o)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a50" clip-path="url(#e)" class="cF" fill="#F00"/>
+    <use xlink:href="#a08" clip-path="url(#o)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a08" clip-path="url(#e)" class="cF" fill="#F00"/>
+    <use xlink:href="#a49" clip-path="url(#o)" class="c9" fill="#F00"/>
+    <use xlink:href="#a49" clip-path="url(#e)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a09" clip-path="url(#o)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a09" clip-path="url(#e)" class="cE" fill="#F00"/>
+    <use xlink:href="#a48" clip-path="url(#o)" class="cA" fill="#F00"/>
+    <use xlink:href="#a48" clip-path="url(#e)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a10" clip-path="url(#o)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a10" clip-path="url(#e)" class="cD" fill="#F00"/>
+    <use xlink:href="#a47" clip-path="url(#o)" class="cB" fill="#F00"/>
+    <use xlink:href="#a47" clip-path="url(#e)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a11" clip-path="url(#o)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a11" clip-path="url(#e)" class="cC" fill="#F00"/>
+    <use xlink:href="#a46" clip-path="url(#o)" class="cC" fill="#F00"/>
+    <use xlink:href="#a46" clip-path="url(#e)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a12" clip-path="url(#o)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a12" clip-path="url(#e)" class="cB" fill="#F00"/>
+    <use xlink:href="#a45" clip-path="url(#o)" class="cD" fill="#F00"/>
+    <use xlink:href="#a45" clip-path="url(#e)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a13" clip-path="url(#o)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a13" clip-path="url(#e)" class="cA" fill="#F00"/>
+    <use xlink:href="#a44" clip-path="url(#o)" class="cE" fill="#F00"/>
+    <use xlink:href="#a44" clip-path="url(#e)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a14" clip-path="url(#o)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a14" clip-path="url(#e)" class="c9" fill="#F00"/>
+    <use xlink:href="#a43" clip-path="url(#o)" class="cF" fill="#F00"/>
+    <use xlink:href="#a43" clip-path="url(#e)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a15" clip-path="url(#o)" class="cF" fill="#F00"/>
+    <use xlink:href="#a15" clip-path="url(#e)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a42" clip-path="url(#o)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a42" clip-path="url(#e)" class="c9" fill="#F00"/>
+    <use xlink:href="#a16" clip-path="url(#o)" class="cE" fill="#F00"/>
+    <use xlink:href="#a16" clip-path="url(#e)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a41" clip-path="url(#o)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a41" clip-path="url(#e)" class="cA" fill="#F00"/>
+    <use xlink:href="#a17" clip-path="url(#o)" class="cD" fill="#F00"/>
+    <use xlink:href="#a17" clip-path="url(#e)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a40" clip-path="url(#o)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a40" clip-path="url(#e)" class="cB" fill="#F00"/>
+    <use xlink:href="#a18" clip-path="url(#o)" class="cC" fill="#F00"/>
+    <use xlink:href="#a18" clip-path="url(#e)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a39" clip-path="url(#o)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a39" clip-path="url(#e)" class="cC" fill="#F00"/>
+    <use xlink:href="#a19" clip-path="url(#o)" class="cB" fill="#F00"/>
+    <use xlink:href="#a19" clip-path="url(#e)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a38" clip-path="url(#o)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a38" clip-path="url(#e)" class="cD" fill="#F00"/>
+    <use xlink:href="#a20" clip-path="url(#o)" class="cA" fill="#F00"/>
+    <use xlink:href="#a20" clip-path="url(#e)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a37" clip-path="url(#o)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a37" clip-path="url(#e)" class="cE" fill="#F00"/>
+    <use xlink:href="#a21" clip-path="url(#o)" class="c9" fill="#F00"/>
+    <use xlink:href="#a21" clip-path="url(#e)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a36" clip-path="url(#o)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a36" clip-path="url(#e)" class="cF" fill="#F00"/>
+    <use xlink:href="#a22" clip-path="url(#o)" class="c8" fill="#FFF"/>
+    <use xlink:href="#a22" clip-path="url(#e)" class="cF" fill="#F00"/>
+    <use xlink:href="#a35" clip-path="url(#o)" class="c9" fill="#F00"/>
+    <use xlink:href="#a35" clip-path="url(#e)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a23" clip-path="url(#o)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a23" clip-path="url(#e)" class="cE" fill="#F00"/>
+    <use xlink:href="#a34" clip-path="url(#o)" class="cA" fill="#F00"/>
+    <use xlink:href="#a34" clip-path="url(#e)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a24" clip-path="url(#o)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a24" clip-path="url(#e)" class="cD" fill="#F00"/>
+    <use xlink:href="#a33" clip-path="url(#o)" class="cB" fill="#F00"/>
+    <use xlink:href="#a33" clip-path="url(#e)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a25" clip-path="url(#o)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a25" clip-path="url(#e)" class="cC" fill="#F00"/>
+    <use xlink:href="#a32" clip-path="url(#o)" class="cC" fill="#F00"/>
+    <use xlink:href="#a32" clip-path="url(#e)" class="c5" fill="#FFF"/>
+    <use xlink:href="#a26" clip-path="url(#o)" class="c4" fill="#FFF"/>
+    <use xlink:href="#a26" clip-path="url(#e)" class="cB" fill="#F00"/>
+    <use xlink:href="#a31" clip-path="url(#o)" class="cD" fill="#F00"/>
+    <use xlink:href="#a31" clip-path="url(#e)" class="c6" fill="#FFF"/>
+    <use xlink:href="#a27" clip-path="url(#o)" class="c3" fill="#FFF"/>
+    <use xlink:href="#a27" clip-path="url(#e)" class="cA" fill="#F00"/>
+    <use xlink:href="#a30" clip-path="url(#o)" class="cE" fill="#F00"/>
+    <use xlink:href="#a30" clip-path="url(#e)" class="c7" fill="#FFF"/>
+    <use xlink:href="#a28" clip-path="url(#o)" class="c2" fill="#FDD"/>
+    <use xlink:href="#a28" clip-path="url(#e)" class="c9" fill="#F00"/>
+    <use xlink:href="#a29" clip-path="url(#o)" class="cF" fill="#F00"/>
+    <use xlink:href="#a29" clip-path="url(#e)" class="c8" fill="#FFF"/>
+  </g>
+</svg>
