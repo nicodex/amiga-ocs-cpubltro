@@ -206,9 +206,9 @@ Emulation requires a very accurate CPU/DMA simulation, e.g.:
   - [vAmiga.net](https://vamiganet.github.io/) (vAmiga online version)
 
 Previous research states:  
-  - [v0.2.1](https://github.com/nicodex/amiga-ocs-cpubltro/releases/tag/v0.2.1)
+  - [v0.2.1](https://github.com/nicodex/amiga-ocs-cpubltro/tree/v0.2.1)
     `EHB42 mode`, static 352x280 image
-  - [v0.1](https://github.com/nicodex/amiga-ocs-cpubltro/releases/tag/v0.1)
+  - [v0.1](https://github.com/nicodex/amiga-ocs-cpubltro/tree/v0.1)
     `EHB42 mode`, simple loop counter
 
 `EHB42 mode` is my name for an Amiga OCS/ECS chipset anomaly:  
