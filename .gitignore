@@ -1,5 +1,6 @@
 /.idea/
 /winuae/
 /cpubltro.i
+/images/boing[0-9]*.svg
 *.pal
 *.xcf

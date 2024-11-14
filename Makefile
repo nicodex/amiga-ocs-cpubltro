@@ -7,14 +7,14 @@ VASM ?= $(AMIGA_TOOLCHAIN)/bin/vasmm68k_mot
 VASM_OPTS ?= -quiet -wfail -x
 ROMTOOL ?= /usr/bin/env romtool
 WINE ?= /usr/bin/env wine
-WINUAE_ZIP ?= WinUAE5300.zip
+WINUAE_ZIP ?= WinUAE5310.zip
 WINUAE_URL ?= https://download.abime.net/winuae/releases/$(WINUAE_ZIP)
 
 all: cpubltro-0fc.rom cpubltro-a1k.adf cpubltro-0f8.rom cpubltro-0f8.bin
 
 .PHONY: all clean distclean check check1 check2 test test1
 
-cpubltro.i: cpubltro.py cpubltro.png
+cpubltro.i: cpubltro.py images/frame*.png
 	python3 $<
 
 cpubltro-0fc.rom : cpubltro.asm cpubltro.i
@@ -40,6 +40,7 @@ distclean:
 	rm -rf .idea
 	rm -rf winuae
 	rm -f cpubltro.i
+	rm -f images/boing*.svg
 
 check: check1 check2
 

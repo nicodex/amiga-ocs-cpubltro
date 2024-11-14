@@ -24,10 +24,10 @@ Release files:
   - [cpubltro-0f8.rom](cpubltro-0f8.rom) 512K ROM image (MapROM or emulator)
   - [cpubltro-0f8.bin](cpubltro-0f8.bin) 512K byte swapped ROM image (EPROM)
 
-If all works as expected, the screen looks like this:  
-![Amiga CPU Blit Read-Only - main screen image](cpubltro.png)
+The remaining ROM space allows us to include eleven animation frames.
 
-TODO: Fill the remaining ROM space with animation frames.
+If all works as expected, the screen should look like this (scaled):  
+![Amiga CPU Blit Read-Only - main screen image](cpubltro.png)
 
 
 Details

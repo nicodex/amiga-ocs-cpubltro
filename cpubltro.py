@@ -4,7 +4,8 @@ import png
 import sys
 
 ASM_FILENAME = 'cpubltro.i'
-IMG_FILENAME = 'cpubltro.png'
+IMG_FILENAME = 'images/frame{0:03d}.png'
+IMG_COUNT = 11
 IMG_WIDTH = 320
 IMG_HEIGHT = 256
 ROW_COLORS = 4
@@ -46,58 +47,62 @@ def ocs_to_rgb(ocs):
     ((((ocs >> 4) & 0xF) * OCS_SCALE) <<  8) |
     ((((ocs >> 0) & 0xF) * OCS_SCALE) <<  0))
 
-width, height, rows, info = png.Reader(filename=IMG_FILENAME).read()
-if (width != IMG_WIDTH) or (height != IMG_HEIGHT):
-  sys.exit(f'fixme: image size has to be {IMG_WIDTH:d}x{IMG_HEIGHT:d}')
-if ('palette' not in info):
-  sys.exit('fixme: only palette-based images implemented')
-pal = info['palette']
+def load_image(frame):
+  filepath = IMG_FILENAME.format(frame)
+  print('[{0:s}]'.format(filepath))
+  width, height, rows, info = png.Reader(filename=filepath).read()
+  if (width != IMG_WIDTH) or (height != IMG_HEIGHT):
+    sys.exit(f'fixme: image size has to be {IMG_WIDTH:d}x{IMG_HEIGHT:d}')
+  if ('palette' not in info):
+    sys.exit('fixme: only palette-based images implemented')
+  pal = info['palette']
+  img_code = ''
+  img_pal = []
+  row_pal = []
+  y = -1
+  for row in rows:
+    y += 1
+    row_idx = set([idx for idx in row])
+    row_dat = [0] * ROW_LENGTH
+    updated = -1
+    for column in range(IMG_LENGTH):
+      bpl2dat = 0
+      bpl3dat = 0
+      for bit in range(16):
+        x = column * 16 + bit
+        index = row[x]
+        if index not in row_pal:
+          if updated < 0:
+            for i in range(len(row_pal)):
+              if row_pal[i] not in row_idx:
+                updated = i
+                row_pal[updated] = index
+                break
+          if (updated < 0) or (row_pal[updated] != index):
+            img_pal.append(index)
+            row_pal.append(index)
+            if len(img_pal) > ROW_COLORS:
+              sys.exit(f'fixme: too many colors at [{x:d},{y:d}]')
+        color = row_pal.index(index)
+        bpl2dat = (bpl2dat << 1) | ((color >> 0) & 1)
+        bpl3dat = (bpl3dat << 1) | ((color >> 1) & 1)
+      row_dat[COL_IDX[column]] = (bpl2dat << 16) | bpl3dat
+    if updated < 0:
+      row_dat[CCR_IDX[0]] = 0
+      row_dat[CCR_IDX[1]] = 0xDFF116 # bpl4data/bpl5data
+    else:
+      ocs = rgb_to_ocs(get_pal_rgb(pal, row_pal[updated]))
+      row_dat[CCR_IDX[0]] = (ocs << 16) | ocs
+      row_dat[CCR_IDX[1]] = 0xDFF180 + (updated * 2 * 2)
+    img_code += '\t\tdc.l\t' + ','.join(f'${l:08X}' for l in row_dat) + '\n'
+  img_ocs = [rgb_to_ocs(get_pal_rgb(pal, i)) for i in img_pal]
+  while len(img_ocs) < ROW_COLORS:
+    img_ocs.append(0)
+  pal_code = '\t\tdc.w\t' + ','.join(f'${w:03X}' for w in img_ocs) + '\n'
+  return (pal_code + img_code)
 
-img_code = ''
-img_pal = []
-row_pal = []
-y = -1
-for row in rows:
-  y += 1
-  row_idx = set([idx for idx in row])
-  row_dat = [0] * ROW_LENGTH
-  updated = -1
-  for column in range(IMG_LENGTH):
-    bpl2dat = 0
-    bpl3dat = 0
-    for bit in range(16):
-      x = column * 16 + bit
-      index = row[x]
-      if index not in row_pal:
-        if updated < 0:
-          for i in range(len(row_pal)):
-            if row_pal[i] not in row_idx:
-              updated = i
-              row_pal[updated] = index
-              break
-        if (updated < 0) or (row_pal[updated] != index):
-          img_pal.append(index)
-          row_pal.append(index)
-          if len(img_pal) > ROW_COLORS:
-            sys.exit(f'fixme: too many colors at [{x:d},{y:d}]')
-      color = row_pal.index(index)
-      bpl2dat = (bpl2dat << 1) | ((color >> 0) & 1)
-      bpl3dat = (bpl3dat << 1) | ((color >> 1) & 1)
-    row_dat[COL_IDX[column]] = (bpl2dat << 16) | bpl3dat
-  if updated < 0:
-    row_dat[CCR_IDX[0]] = 0
-    row_dat[CCR_IDX[1]] = 0xDFF116 # bpl4data/bpl5data
-  else:
-    ocs = rgb_to_ocs(get_pal_rgb(pal, row_pal[updated]))
-    row_dat[CCR_IDX[0]] = (ocs << 16) | ocs
-    row_dat[CCR_IDX[1]] = 0xDFF180 + (updated * 2 * 2)
-  img_code += '\t\tdc.l\t' + ','.join(f'${l:08X}' for l in row_dat) + '\n'
-img_ocs = [rgb_to_ocs(get_pal_rgb(pal, i)) for i in img_pal]
-while len(img_ocs) < ROW_COLORS:
-  img_ocs.append(0)
-pal_code = '\t\tdc.w\t' + ','.join(f'${w:03X}' for w in img_ocs) + '\n'
-
-with open(ASM_FILENAME, 'w', encoding='ascii') as f:
-  f.write(pal_code)
-  f.write(img_code)
+with open(ASM_FILENAME, 'w', encoding='ascii') as asm:
+  for frame in range(1, IMG_COUNT + 1):
+    asm.write('; frame{0:03d}\n'.format(frame))
+    asm.write(load_image(frame))
 

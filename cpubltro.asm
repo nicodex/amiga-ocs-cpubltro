@@ -71,9 +71,9 @@ RomBase:
 ; VEC_RESV12=12
 		; Release ROM footer checksum = 0
 	IFEQ	ROM_SIZE-(512*1024)
-		dc.l   	$FBA65F09
+		dc.l   	$6BD61D16
 	ELSE
-		dc.l   	$F6644919
+		dc.l   	$66940726
 	ENDC
 ; VEC_COPROC=13 VEC_FORMAT=14 VEC_UNINT=15
 		dcb.l  	1-13+15,Exception
@@ -128,7 +128,7 @@ Exception:
 		dcb.b  	(*-RomBase)&%0100,0	; long long align
 		dcb.b  	(*-RomBase)&%1000,0	; paragraph align
 RomResIDs:
-		dc.b   	'cpubltro.rom 0.3 (15.10.2024)',13,10,0
+		dc.b   	'cpubltro.rom 0.3 (11.11.2024)',13,10,0
 		dc.b   	'(c) 2024 Nico Bendlin <nico@nicode.net>',10
 		dc.b   	'No Rights Reserved.',0
 		dc.b   	'https://github.com/nicodex/amiga-ocs-cpubltro',0
@@ -246,27 +246,48 @@ MY_MODLONG	EQU	(MY_BPLxMOD<<16)!MY_BPLxMOD
 ;                   Draw routine uses every register but D0
 ;
 MY_IMG_BYTES	EQU	4*2+(MY_DIW_H*(2*4+(MY_DIW_W/8*2)))
+MY_IMG_COUNT	EQU	11
 	;	moveq  	#0,d0
 DrawLoop:
 		lea    	($DFF000),a0  	; _custom
 		;
 		; wait for first line (>= 256, < 256)
 		;
-0$:		btst.b 	d0,($004+1,a0)	; (vposr:V8,_custom)
+		moveq  	#0,d1
+0$:		btst.b 	d1,($004+1,a0)   	; (vposr:V8,_custom)
 		beq.b  	0$
-1$:		btst.b 	d0,($004+1,a0)	; (vposr:V8,_custom)
+1$:		btst.b 	d1,($004+1,a0)   	; (vposr:V8,_custom)
 		bne.b  	1$
-		;
-		; load initial image palette colors
+		; wait for VHPOS change before reading LOF (ICS)
+		move.w 	($006,a0),d1     	; (vhposr,_custom)
+2$:		cmp.w  	($006,a0),d1     	; (vhposr,_custom)
+		beq.b  	2$
+		moveq  	#1,d1
+		; insert short/even field bit in counter
+		btst.b 	#15-8,($004+0,a0)	; (vposr:LOF,_custom)
+		bne.b  	3$
+		or.b   	d1,d0
+3$:		;
+		; select current frame image (two fields)
 		;
 		lea    	(DrawData,pc),a6
+		move.l 	d0,d2
+		lsr.l  	d1,d2
+		mulu.w 	#MY_IMG_BYTES,d2
+		adda.l 	d2,a6
+		; advance/reset reset field counter
+		addq.l 	#1,d0
+		cmpi.w  #(MY_IMG_COUNT<<1),d0
+		blo.b  	4$
+		moveq  	#0,d0
+4$:		; load initial image palette colors
 		lea    	($180,a0),a1  	; (color00,_custom)
 		moveq  	#4-1,d2
-2$:		move.w 	(a6),d1
+5$:		move.w 	(a6),d1
 		swap   	d1
 		move.w 	(a6)+,d1
 		move.l 	d1,(a1)+
-		dbf    	d2,2$
+		dbf    	d2,5$
 		;
 		; sync to MY_DIW_T - 1 / time slot $DA/$DB
 		;
@@ -285,14 +306,14 @@ MY_SYNC_TAB	EQU	(1<<4)-2
 		move.w 	#((MY_DIW_T-1)<<8)!MY_SYNC_POS,d2
 		move.w 	#((MY_DIW_T-1)<<8)!(MY_SYNC_MAX-MY_SYNC_TAB),d3
 		move.w 	#MY_SYNC_TAB,d4
-3$:		move.w 	(a1),d1     	; .r.p
+6$:		move.w 	(a1),d1     	; .r.p
 		cmp.w  	d2,d1       	; .p
-		blo.b  	3$          	; [.]..p/..p.p (continue/branch)
+		blo.b  	6$          	; [.]..p/..p.p (continue/branch)
 		move.w 	(a1),d1     	; .r.p
 		sub.w  	d3,d1       	; .p
 		and.w  	d4,d1       	; .p
-		jmp    	(4$,pc,d1.w)	; ....p.p
-4$:
+		jmp    	(7$,pc,d1.w)	; ....p.p
+7$:
 	REPT	MY_SYNC_TAB/2
 		nop
 	ENDR
@@ -331,7 +352,7 @@ MY_SYNC_TAB	EQU	(1<<4)-2
 		dcb.b  	(*-RomBase)&%0010,ROM_FILL
 DrawData:
 	INCLUDE	"cpubltro.i"
-	IFNE	*-DrawData-MY_IMG_BYTES
+	IFNE	*-DrawData-(MY_IMG_BYTES*MY_IMG_COUNT)
 	FAIL	"Unexpected draw data size, review the code/data."
 	ENDC
 
