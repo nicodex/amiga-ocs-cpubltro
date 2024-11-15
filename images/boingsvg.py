@@ -3,9 +3,9 @@
 import sys
 from mpmath import mp
 
-FRAME_COUNT = 11 # original has 14 frames (color cycling steps)
+FRAME_COUNT = 11 * 2 # original has 14 frames (color cycling steps)
 FILE_PREFIX = 'boing'
-RENDER_SIZE = '240px' # original size 94mm (Amiga monitor 1081)
+RENDER_SIZE = '240px' # original size is 94mm (Amiga monitor 1081)
 
 SHADE_NONE, SHADE_CCW, SHADE_CW = range(3)
 SHADE_TYPE = SHADE_CCW

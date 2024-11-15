@@ -5,7 +5,7 @@ import sys
 
 ASM_FILENAME = 'cpubltro.i'
 IMG_FILENAME = 'images/frame{0:03d}.png'
-IMG_COUNT = 11
+IMG_COUNT = 11 * 2
 IMG_WIDTH = 320
 IMG_HEIGHT = 256
 ROW_COLORS = 4
@@ -104,5 +104,9 @@ def load_image(frame):
 with open(ASM_FILENAME, 'w', encoding='ascii') as asm:
   for frame in range(1, IMG_COUNT + 1):
     asm.write('; frame{0:03d}\n'.format(frame))
+    if not(frame & 1):
+      asm.write('\tIFEQ\tROM_SIZE-(512*1024)\n')
     asm.write(load_image(frame))
+    if not(frame & 1):
+      asm.write('\tENDC\n')
 

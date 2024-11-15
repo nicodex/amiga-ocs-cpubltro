@@ -71,9 +71,9 @@ RomBase:
 ; VEC_RESV12=12
 		; Release ROM footer checksum = 0
 	IFEQ	ROM_SIZE-(512*1024)
-		dc.l   	$6BD61D16
+		dc.l   	$B01330E3
 	ELSE
-		dc.l   	$66940726
+		dc.l   	$66940722
 	ENDC
 ; VEC_COPROC=13 VEC_FORMAT=14 VEC_UNINT=15
 		dcb.l  	1-13+15,Exception
@@ -128,7 +128,7 @@ Exception:
 		dcb.b  	(*-RomBase)&%0100,0	; long long align
 		dcb.b  	(*-RomBase)&%1000,0	; paragraph align
 RomResIDs:
-		dc.b   	'cpubltro.rom 0.3 (11.11.2024)',13,10,0
+		dc.b   	'cpubltro.rom 0.3 (15.11.2024)',13,10,0
 		dc.b   	'(c) 2024 Nico Bendlin <nico@nicode.net>',10
 		dc.b   	'No Rights Reserved.',0
 		dc.b   	'https://github.com/nicodex/amiga-ocs-cpubltro',0
@@ -246,7 +246,11 @@ MY_MODLONG	EQU	(MY_BPLxMOD<<16)!MY_BPLxMOD
 ;                   Draw routine uses every register but D0
 ;
 MY_IMG_BYTES	EQU	4*2+(MY_DIW_H*(2*4+(MY_DIW_W/8*2)))
+	IFEQ	ROM_SIZE-(512*1024)
+MY_IMG_COUNT	EQU	11*2
+	ELSE
 MY_IMG_COUNT	EQU	11
+	ENDC
 	;	moveq  	#0,d0
 DrawLoop:
 		lea    	($DFF000),a0  	; _custom
@@ -363,21 +367,21 @@ RomResEnd:
 ;
 ;   2.04-like compatibility hack for legacy code that jumps to $FC0002
 ;
-	IFGT	ROM_SIZE-(256*1024)
-		dcb.b  	(256*1024)-(*-RomBase),ROM_FILL
-KickSplit:
-		dc.l   	ROM_256K 	; VEC_RESETSP
-		dc.l   	ColdStart	; VEC_RESETPC
-		;
-		; not part of the legacy Kickety-Split
-		;
-		dcb.l  	1-2+51,Exception
-		reset  	  	; Legacy compatibility ($FC00D0)
-		bra.b  	0$	; Legacy compatibility ($FC00D2)
-		dcb.l  	1-53+58,Exception
-0$:		bra.w  	KickSplit+2
-		dcb.l  	1-60+64,Exception
-	ENDC
+;	IFGT	ROM_SIZE-(256*1024)
+;		dcb.b  	(256*1024)-(*-RomBase),ROM_FILL
+;KickSplit:
+;		dc.l   	ROM_256K 	; VEC_RESETSP
+;		dc.l   	ColdStart	; VEC_RESETPC
+;		;
+;		; not part of the legacy Kickety-Split
+;		;
+;		dcb.l  	1-2+51,Exception
+;		reset  	  	; Legacy compatibility ($FC00D0)
+;		bra.b  	0$	; Legacy compatibility ($FC00D2)
+;		dcb.l  	1-53+58,Exception
+;0$:		bra.w  	KickSplit+2
+;		dcb.l  	1-60+64,Exception
+;	ENDC
 
 ;
 ; ROM footer
