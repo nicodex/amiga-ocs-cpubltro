@@ -205,6 +205,8 @@ Emulation requires a very accurate CPU/DMA simulation, e.g.:
   - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (Windows/Wine)
   - [vAmiga.net](https://vamiganet.github.io/) (vAmiga online version)
 
+![Amiga 500 without DRAM, CIAs, and Paula](README.jpg)
+
 Previous research states:  
   - [v0.2.1](https://github.com/nicodex/amiga-ocs-cpubltro/tree/v0.2.1)
     `EHB42 mode`, static 352x280 image
