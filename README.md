@@ -29,6 +29,9 @@ The remaining ROM space allows us to include 11/256K animation frames.
 If all works as expected, it should look like this (512K ROM, scaled):  
 ![Amiga CPU Blit Read-Only - Boing! ball animation](cpubltro.png)
 
+TODO: Try to mimic the original Boing! demo as closely as possible without RAM
+(no Agnus DMA at all, use sprite registers, ...). This is already in the works,
+but will take some time (might be ready for the Revision party in April 2025).
 
 Details
 -------
@@ -203,7 +206,8 @@ Comments, bugfixes, and tests on real hardware are very welcome.
 
 Emulation requires a very accurate CPU/DMA simulation, e.g.:  
   - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (Windows/Wine)
-  - [vAmiga.net](https://vamiganet.github.io/) (vAmiga online version)
+  - [vAmigaNet](https://vamiganet.github.io/) (vAmiga online version)
+  - [vAmigaWeb](https://vamigaweb.github.io/) (vAmiga online version)
 
 ![Amiga 500 without DRAM, CIAs, and Paula](README.jpg)
 
