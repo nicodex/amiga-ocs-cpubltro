@@ -93,7 +93,7 @@ test1: cpubltro-0fc.rom | winuae/winuae.exe
 		-s gfx_linemode=double \
 		-s gfx_center_horizontal=smart \
 		-s gfx_center_vertical=smart \
-		-s gfx_api=directdraw \
+		-s gfx_api=direct3d \
 		-s gfx_api_options=hardware \
 		-s gfx_overscanmode=ultra_csync \
 		-s win32.start_not_captured=true \
@@ -132,7 +132,7 @@ test2: cpubltro-0f8.rom | winuae/winuae.exe
 		-s gfx_linemode=double \
 		-s gfx_center_horizontal=smart \
 		-s gfx_center_vertical=smart \
-		-s gfx_api=directdraw \
+		-s gfx_api=direct3d \
 		-s gfx_api_options=hardware \
 		-s gfx_overscanmode=ultra_csync \
 		-s win32.start_not_captured=true \
