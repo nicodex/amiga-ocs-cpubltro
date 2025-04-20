@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Boing! ball animation</title>
+		<style id="back_to_the_90s">
+body { background-color: #aaa; color: #000; max-width: 482px; margin: auto; }
+div, h1, h2, p { border: 0; margin: 0; padding: 0; }
+div { background-image: url('data:image/svg+xml,<svg viewBox="0 0 16 16" \
+xmlns="http://www.w3.org/2000/svg" version="1.1"><path d="M.5,15.5V.5h15" \
+stroke="%23a0a" stroke-width="1" stroke-linecap="square" fill="none"/></svg>');
+ background-position: top left; background-repeat: repeat;
+ background-size: 32px 32px; }
+h1, h2 { padding: .5ex .5em; }
+h1 { background-color: #05a; border: 2px solid; color: #fff; }
+h2 { background-color: #68b; }
+img { border: 0; margin: 0; padding: 32px 28px 28px 32px; }
+.pixel { cursor: url(pointer.png) 1 1, default; image-rendering: pixelated; }
+		</style>
+	</head>
+	<body>
+		<h1>Boing! ball animation</h1>
+		<h2>PAL&nbsp;5:4 (50&nbsp;Hz, 24&nbsp;frames, PAR&nbsp;1:1)</h2>
+		<div>
+			<p>
+				<img src="doc/ballanim.webp" width="224" height="224" class="pixel"
+					alt="PAL scaled" title="PAL animation (2x zoom)">
+				<img src="doc/ballanim.webp" width="112" height="112" class="pixel"
+					alt="PAL animation" title="PAL animation (LoRes pixel)">
+			</p>
+			<p>
+				<img src="gimp/ballpath.svg" width="224" height="224"
+					alt="PAL path base" title="PAL base SVG (2x zoom)">
+				<img src="ballcmap.png" width="112" height="112" class="pixel"
+					alt="PAL color map" title="PAL animation steps">
+			</p>
+		</div>
+		<h2>NTSC&nbsp;4:3 (60&nbsp;Hz, 28&nbsp;frames, PAR&nbsp;5:6)</h2>
+		<div>
+			<p>
+				<img src="doc/ntscanim.webp" width="224" height="224" class="pixel"
+					alt="NTSC scaled" title="NTSC animation (2x zoom to square)">
+				<img src="doc/ntscanim.webp" width="112" height="93" class="pixel"
+					alt="NTSC animation" title="NTSC animation (LoRes pixel)">
+			</p>
+			<p>
+				<img src="gimp/ntscpath.svg" width="224" height="186"
+					alt="NTSC path base" title="NTSC base SVG (2x zoom)">
+				<img src="ntsccmap.png" width="112" height="93" class="pixel"
+					alt="NTSC color map" title="NTSC animation steps">
+			</p>
+		</div>
+	</body>
+</html>

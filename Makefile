@@ -9,45 +9,35 @@ ROMTOOL ?= /usr/bin/env romtool
 WINE ?= /usr/bin/env wine
 WINUAE_ZIP ?= WinUAE5310.zip
 WINUAE_URL ?= https://download.abime.net/winuae/releases/$(WINUAE_ZIP)
+PYTHON_BIN ?= /usr/bin/env python3
 
-all: cpubltro-0fc.rom cpubltro-a1k.adf cpubltro-0f8.rom cpubltro-0f8.bin
+all: cpubltro.rom cpubltro.adf
 
-.PHONY: all clean distclean check check1 check2 test test1
+.PHONY: all clean distclean check test
 
-cpubltro.i: cpubltro.py images/frame*.png
-	python3 $<
+images/ptrdata.i: images/pointer.png
+	(cd images && $(PYTHON_BIN) ptrdata.py)
 
-cpubltro-0fc.rom : cpubltro.asm cpubltro.i
-	$(VASM) -Fbin -DROM_SIZE=262144 $(VASM_OPTS) -o $@ $<
+images/balldata.i: images/balleast/image000.png images/ballwest/image000.png
+	(cd images && $(PYTHON_BIN) sprdata.py)
+
+cpubltro.rom : cpubltro.asm images/ptrdata.i images/balldata.i
+	$(VASM) -Fbin $(VASM_OPTS) -o $@ $<
 	-$(ROMTOOL) copy --fix-checksum $@ $@
 
-cpubltro-a1k.adf : cpubltro-a1k.asm cpubltro-0fc.rom
+cpubltro.adf : cpubltro.adf.asm cpubltro.rom
 	$(VASM) -Fbin $(VASM_OPTS) -o $@ $<
 
-cpubltro-0f8.rom : cpubltro.asm cpubltro.i
-	$(VASM) -Fbin -DROM_SIZE=524288 $(VASM_OPTS) -o $@ $<
-	-$(ROMTOOL) copy --fix-checksum $@ $@
-
-cpubltro-0f8.bin: cpubltro-0f8.rom
-	dd conv=swab if=$< of=$@
-
 clean:
-	rm -f cpubltro.i
-	rm -f cpubltro-0fc.rom cpubltro-a1k.adf
-	rm -f cpubltro-0f8.rom cpubltro-0f8.bin
+	rm -f images/ptrdata.i
+	rm -f images/balldata.i
+	rm -f cpubltro.rom cpubltro.adf
 
 distclean:
 	rm -rf .idea
 	rm -rf winuae
-	rm -f cpubltro.i
-	rm -f images/boing*.svg
 
-check: check1 check2
-
-check1: cpubltro-0fc.rom
-	$(ROMTOOL) info $<
-
-check2: cpubltro-0f8.rom
+check: cpubltro.rom
 	$(ROMTOOL) info $<
 
 winuae/$(WINUAE_ZIP):
@@ -56,9 +46,7 @@ winuae/$(WINUAE_ZIP):
 winuae/winuae.exe: | winuae/$(WINUAE_ZIP)
 	cd winuae && unzip $(WINUAE_ZIP)
 
-test: test1 test2
-
-test1: cpubltro-0fc.rom | winuae/winuae.exe
+test: cpubltro.rom | winuae/winuae.exe
 	cd winuae && $(WINE) winuae.exe -s use_gui=false \
 		-s kickstart_rom_file="Z:$(subst /,\,$(abspath $<))" \
 		-s boot_rom_uae=disabled \
@@ -95,46 +83,10 @@ test1: cpubltro-0fc.rom | winuae/winuae.exe
 		-s gfx_center_vertical=smart \
 		-s gfx_api=direct3d \
 		-s gfx_api_options=hardware \
-		-s gfx_overscanmode=ultra_csync \
-		-s win32.start_not_captured=true \
-		-s win32.nonotificationicon=true
+		-s gfx_overscanmode=tv_normal \
+		-s gfx_fullscreen_amiga=true \
+		-s win32.start_not_captured=false \
+		-s win32.nonotificationicon=true \
+		2> /dev/null
 
-test2: cpubltro-0f8.rom | winuae/winuae.exe
-	cd winuae && $(WINE) winuae.exe -s use_gui=false \
-		-s kickstart_rom_file="Z:$(subst /,\,$(abspath $<))" \
-		-s boot_rom_uae=disabled \
-		-s ntsc=false \
-		-s genlock=false \
-		-s chipset=ecs \
-		-s chipset_compatible=A500+ \
-		-s agnusmodel=ecs \
-		-s denisemodel=ecs \
-		-s cycle_exact=true \
-		-s cpu_type=68010 \
-		-s cpu_model=68010 \
-		-s cpu_speed=real \
-		-s cpu_multiplier=2 \
-		-s cpu_compatible=true \
-		-s cpu_24bit_addressing=true \
-		-s cpu_cycle_exact=true \
-		-s cpu_memory_cycle_exact=true \
-		-s fastmem_size=0 \
-		-s chipmem_size=0 \
-		-s gfx_display=0 \
-		-s gfx_width=1920 \
-		-s gfx_height=1080 \
-		-s gfx_width_windowed=784 \
-		-s gfx_height_windowed=636 \
-		-s gfx_lores=true \
-		-s gfx_resolution=lores \
-		-s gfx_lores_mode=normal \
-		-s gfx_flickerfixer=false \
-		-s gfx_linemode=double \
-		-s gfx_center_horizontal=smart \
-		-s gfx_center_vertical=smart \
-		-s gfx_api=direct3d \
-		-s gfx_api_options=hardware \
-		-s gfx_overscanmode=ultra_csync \
-		-s win32.start_not_captured=true \
-		-s win32.nonotificationicon=true
 
