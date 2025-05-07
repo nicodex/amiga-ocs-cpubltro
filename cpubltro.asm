@@ -6,10 +6,14 @@
 ;
 ;	Target requirements:
 ;	  - Motorola 68000 CPU @ 7 MHz (fixed timing)
-;	  - PAL on reset (NTSC would require rewrite)
 ;
-; > vasmm68k_mot -Fbin -o cpubltro.rom cpubltro.asm
+; > vasmm68k_mot -Fbin -DROM_NTSC=1 -o cpubltro-ntsc.rom cpubltro.asm
+; > vasmm68k_mot -Fbin -DROM_NTSC=0 -o cpubltro-pal.rom cpubltro.asm
 ;
+	IFND	ROM_NTSC
+ROM_NTSC	EQU	0
+	ENDC
+
 	IDNT	CPUBLTRO_ROM
 
 	MACHINE	68000
@@ -47,7 +51,11 @@ RomBase:
 		dc.l   	ROM_256K          	; VEC_RESETSP
 		dc.l   	3$                	; VEC_RESETPC
 		dcb.l  	1-2+11,5$         	; VEC_BUSERR-VEC_LINE11
-		dc.l   	$E85D7D64         	; VEC_RESV12 (ROM checksum=0)
+	IFNE	ROM_NTSC
+		dc.l   	$977F531B         	; VEC_RESV12 (release chksum=0)
+	ELSE
+		dc.l   	$365BA229         	; VEC_RESV12 (release chksum=0)
+	ENDC
 		dcb.l  	1-13+15,5$        	; VEC_COPROC-VEC_UNINT
 0$:		dc.b   	'cpubltro',0,0    	; VEC_RESV16-VEC_SPUR
 1$:		dc.w   	$4AFC             	; (RT_MATCHWORD=RTC_MATCHWORD)
@@ -74,11 +82,16 @@ RomBase:
 		dcb.b  	(*-RomBase)&%0010,0
 		dcb.b  	(*-RomBase)&%0100,0
 		dcb.b  	(*-RomBase)&%1000,0
-7$:		dc.b   	'cpubltro.rom 0.4 (19.04.2025)',13,10,0
+7$:		dc.b   	'cpubltro.rom 0.4.1 (17.05.2025)'
+	IFNE	ROM_NTSC
+		dc.b   	' NTSC'
+	ELSE
+		dc.b   	' PAL '
+	ENDC
+		dc.b   	13,10,0
 		dc.b   	'(c) 2025 Nico Bendlin <nico@nicode.net>',10
 		dc.b   	'No Rights Reserved.',0
-		dc.b   	'https://github.com/nicodex/amiga-ocs'
-		dc.b   	'-cpubltro',0
+		dc.b   	'https://github.com/nicodex/amiga-ocs-cpubltro',0
 		dcb.b  	(*-RomBase)&%0001,0
 		dcb.b  	(*-RomBase)&%0010,0
 		dcb.b  	(*-RomBase)&%0100,0
@@ -144,13 +157,17 @@ RegInit:
 
 ;-----------------------------------------------------------------------------
 ;
-;           PAL LoRes 320x180 (v-centered 16:9 for Revision party)
+;                    LoRes 320x200 (NTSC) / 320x256 (PAL)
 ;
 ScrInit:
 MY_SCR_W  	EQU	320
-MY_SCR_H  	EQU	320*9/16
+	IFNE	ROM_NTSC
+MY_SCR_H  	EQU	200
+	ELSE
+MY_SCR_H  	EQU	256
+	ENDC
 MY_SCR_L  	EQU	129
-MY_SCR_T  	EQU	44+((256-MY_SCR_H)/2)
+MY_SCR_T  	EQU	44
 MY_SCR_R  	EQU	MY_SCR_L+MY_SCR_W
 MY_SCR_B  	EQU	MY_SCR_T+MY_SCR_H
 MY_DIWSTRT	EQU	(MY_SCR_T<<8)!MY_SCR_L
@@ -159,7 +176,12 @@ MY_DIWLONG	EQU	(MY_DIWSTRT<<16)!MY_DIWSTOP
 MY_BPLCON0	EQU	%0001001000000000 	; BPU=1,COLORON
 MY_BPLCONL	EQU	(MY_BPLCON0<<16)!0	; PFH=0
 MY_BPLCON2	EQU	%0000000000100100 	; PFP=SP01/SP23/SP45/SP67/PF
+	IFNE	ROM_NTSC
+MY_BEAMCON	EQU	%0000000000000000 	; NTSC
+	ELSE
 MY_BEAMCON	EQU	%0000000000100000 	; PAL
+	ENDC
+
 		;
 		; WaitTOF
 		;
@@ -209,14 +231,22 @@ MY_BEAMCON	EQU	%0000000000100000 	; PAL
 ;
 ;                                  Main loop
 ;
-MY_ANIM_LEN	EQU	12*2               	; original NTSC has 14 steps
-MY_SPR_SIZE	EQU	(4*7)*(1+112)      	; includes the top skip line
-MY_SPRSTRTX	EQU	-((MY_SCR_W-112)/2)	; rotate eastward, move left
+	IFNE	ROM_NTSC
+MY_ANIM_LEN	EQU	14*2
+MY_SPRLINES	EQU	93
 MY_SPRSTRTY	EQU	8
-MY_SPRMOVEX	EQU	2                  	; positions are in .5 pixels
-MY_SPRMOVEY	EQU	2                  	; positions are in .5 pixels
-MY_ANIMSTEP	EQU	1                  	; half speed (double frames)
-MY_GRAVSTEP	EQU	29
+MY_GRAVSTEP	EQU	17
+	ELSE
+MY_ANIM_LEN	EQU	12*2
+MY_SPRLINES	EQU	112
+MY_SPRSTRTY	EQU	16+8
+MY_GRAVSTEP	EQU	14
+	ENDC
+MY_SPR_SIZE	EQU	(4*7)*(1+MY_SPRLINES)	; includes the top skip line
+MY_SPRSTRTX	EQU	-((MY_SCR_W-112)/2)  	; rotate eastward, move left
+MY_SPRMOVEX	EQU	2                    	; positions are in .5 pixels
+MY_SPRMOVEY	EQU	2                    	; positions are in .5 pixels
+MY_ANIMSTEP	EQU	1                    	; half speed (double frames)
 DrwInit:
 		;
 		; init mouse (data a0)
@@ -356,7 +386,7 @@ PosVert:
 		move.w 	d4,d2
 		divu   	#MY_GRAVSTEP,d2
 		add.w  	d2,d5
-		cmpi.w 	#(2*(MY_SCR_H-112)),d5
+		cmpi.w 	#(2*(MY_SCR_H-MY_SPRLINES)),d5
 		ble.s  	4$
 		sub.w  	d2,d5
 		bra.s  	3$
@@ -458,11 +488,14 @@ DrwLine:
 		nop
 		nop
 		nop
-		nop
-		suba.w 	(a7)+,a2       	; $D3-$D8 .r.p..        (SprSkip)
-		dbf    	d7,DrwLine     	; $D9-$DD ..p.p   (taken)
-		       	               	;    -$DF ..p.p.p (count)
-
+		abcd   	D0,D0
+		suba.w 	(a7)+,a2       	; $D4-$D9 .r.p..        (SprSkip)
+		dbf    	d7,DrwLine     	; $DA-$DE ..p.p   (taken)
+		       	               	;    -$E0 ..p.p.p (count)
+	IFLT	MY_SCR_B-256
+0$:		btst.b 	D0,($004+1,A6)  ; (vposr:V8,_custom)
+		beq.b  	0$
+	ENDC
 		bra.w  	DrwLoop
 
 ;-----------------------------------------------------------------------------
@@ -518,11 +551,10 @@ GrdData:
 ;
 ;                           Sprite skip table (a7)+
 ;
-		;TODO: generate skip table
-		dcb.w  	(MY_SCR_H-112),7*4
+		dcb.w  	(MY_SCR_H-MY_SPRLINES),7*4
 SprSkip:
-		dcb.w  	(1+112),0
-		dcb.w  	(MY_SCR_H-112),7*4
+		dcb.w  	(1+MY_SPRLINES),0
+		dcb.w  	(MY_SCR_H-MY_SPRLINES),7*4
 
 ;-----------------------------------------------------------------------------
 ;
@@ -531,8 +563,11 @@ SprSkip:
 
 
 SprData:
-		;TODO: optimize sprite data (line skip)
+	IFNE	ROM_NTSC
+	INCLUDE	"images/ntscdata.i"
+	ELSE
 	INCLUDE	"images/balldata.i"
+	ENDC
 	IFNE	(*-SprData)-(2*MY_ANIM_LEN*MY_SPR_SIZE)-(4*7)
 	FAIL	"Unexpected sprite data size, review the data/code."
 	ENDC

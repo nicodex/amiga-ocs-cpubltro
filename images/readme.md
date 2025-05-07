@@ -48,14 +48,14 @@ for every displayed display line is introduced, that moves the
 sprite data pointer backwards after processing every line.
 Therefore the sprites are completely drawn from top to bottom.
 
-TODO: This could be further optimized to skip inside sprite lines:  
+`TODO`: This could be further optimized to skip inside sprite lines:  
 ![PAL ball sprite data](doc/ballskip.png)
 ![NTSC ball sprite data](doc/ntscskip.png)
 
 
 ## cursor image
 
-Revision 2025 mouse pointer.
+Mouse pointer might be removed later to free DMA slots for other features.
 
 ![cursor image](pointer.png)
 

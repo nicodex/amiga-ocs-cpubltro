@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
 
-#TODO: NTSC support, optimize sprite data (line skip)
+# not-so-random quote: "sure, but he had to die in the first place"
 
+import argparse
 import png
 import sys
 
-IMG_BASENAME = 'ball' # NTSC 'ntsc'
+argp = argparse.ArgumentParser(prog='sprdata.py', add_help=True,
+  usage='python3 %(prog)s (--pal | --ntsc | --help)',
+  description='Generate ball animation image data.',
+  allow_abbrev=False)
+argp_mode = argp.add_argument_group('mode')
+argp_ntsc = argp_mode.add_mutually_exclusive_group(required=True)
+argp_ntsc.add_argument('--pal', action='store_false', dest='ntsc',
+  help='50Hz (6*2 colors * 2/frame)')
+argp_ntsc.add_argument('--ntsc', action='store_true',
+  help='60Hz (7*2 colors * 2/frame)')
+args, _ = argp.parse_known_args()
+IMG_BASENAME = 'ntsc' if args.ntsc else 'ball'
 ASM_FILENAME = f'{IMG_BASENAME}data.i'
 IMG_FILEFRMT = f'{IMG_BASENAME}{{0}}/image{{1:03d}}.png'
-IMG_COUNT = 24        # NTSC 28
+IMG_COUNT = 7*2*2 if args.ntsc else 6*2*2
 IMG_WIDTH = 7*16
-IMG_HEIGHT = IMG_WIDTH
+IMG_HEIGHT = 93 if args.ntsc else 112
 PALETTE_RGB = (
   (0xA * 0x11, 0xA * 0x11, 0xA * 0x11, 0),
   (0xF * 0x11, 0x0 * 0x11, 0x0 * 0x11, 255),
