@@ -1,0 +1,650 @@
+Sections:
+00: "cpubltro" (0-40000)
+
+
+Source: "cpubltro.asm"
+                            	     1: ; SPDX-FileCopyrightText: 2025 Nico Bendlin <nico@nicode.net>
+                            	     2: ; SPDX-License-Identifier: CC0-1.0
+                            	     3: ;-----------------------------------------------------------------------------
+                            	     4: ;
+                            	     5: ;                  Racing The Beam on the Amiga without RAM
+                            	     6: ;
+                            	     7: ;	Target requirements:
+                            	     8: ;	  - Motorola 68000 CPU @ 7 MHz (fixed timing)
+                            	     9: ;
+                            	    10: ; > vasmm68k_mot -Fbin -DROM_NTSC=1 -o cpubltro-ntsc.rom cpubltro.asm
+                            	    11: ; > vasmm68k_mot -Fbin -DROM_NTSC=0 -o cpubltro-pal.rom cpubltro.asm
+                            	    12: ;
+                            	    13: 	IFND	ROM_NTSC
+                            	    14: ROM_NTSC	EQU	0
+                            	    15: 	ENDC
+                            	    16: 
+                            	    17: 	IDNT	CPUBLTRO_ROM
+                            	    18: 
+                            	    19: 	MACHINE	68000
+                            	    20: 	FPU	0
+                            	    21: 	FAR
+                            	    22: 	OPT	P+ 	; position independent code
+                            	    23: 	OPT	D- 	; debug symbols off
+                            	    24: 	OPT	O- 	; all optimizations off
+                            	    25: 	OPT	OW+	; show optimizations on
+                            	    26: 
+                            	    27: ROM_SIZE	EQU	256*1024
+                            	    28: ROM_256K	EQU	($1111<<16)!$4EF9	; 256K ROM ID, JMP (ABS).L
+                            	    29: ROM_FILL	EQU	~0               	; EPROM/Flash optimization
+                            	    30: 
+                            	    31: 	SECTION	cpubltro,CODE
+                            	    32: 	ORG	$01000000-ROM_SIZE
+                            	    33: 
+                            	    34: ;-----------------------------------------------------------------------------
+                            	    35: ;
+                            	    36: ;              Kickstart ROM header / CPU exception vector table
+                            	    37: ;
+                            	    38: ;         OVL is asserted on RESET and the ROM is also visible at $0.
+                            	    39: ;         The CPU uses vector[1] for the initial PC and vector[0] for
+                            	    40: ;         the initial (S)SP - but the Amiga ROMs include a ROM ID tag
+                            	    41: ;         and a jump instruction here (some firmwares just jump to $2
+                            	    42: ;         after mapping a flash ROM). So we have to init (S)SP later.
+                            	    43: ;
+                            	    44: ;         Because the ROM overlay is never disabled, this is also the
+                            	    45: ;         active CPU exception vector table. The reserved vectors are
+                            	    46: ;         used for meta information (Resident tag). For compatibility
+                            	    47: ;         reasons the initial Reset PC (ColdStart) is at offset $00D2
+                            	    48: ;         (which breaks the FPCP Operand Error exception vector #52).
+                            	    49: ;
+                            	    50: RomBase:
+00:00FC0000 11114EF9        	    51: 		dc.l   	ROM_256K          	; VEC_RESETSP
+00:00FC0004 00FC00D2        	    52: 		dc.l   	3$                	; VEC_RESETPC
+00:00FC0008 00FC00F8        	    53: 		dcb.l  	1-2+11,5$         	; VEC_BUSERR-VEC_LINE11
+00:00FC000C *
+                            	    54: 	IFNE	ROM_NTSC
+00:00FC0030 977F531B        	    55: 		dc.l   	$977F531B         	; VEC_RESV12 (release chksum=0)
+                            	    56: 	ELSE
+                            	    57: 		dc.l   	$365BA229         	; VEC_RESV12 (release chksum=0)
+                            	    58: 	ENDC
+00:00FC0034 00FC00F8        	    59: 		dcb.l  	1-13+15,5$        	; VEC_COPROC-VEC_UNINT
+00:00FC0038 *
+00:00FC0040 637075626C74726F	    60: 0$:		dc.b   	'cpubltro',0,0    	; VEC_RESV16-VEC_SPUR
+00:00FC0048 00
+00:00FC0049 00
+00:00FC004A 4AFC            	    61: 1$:		dc.w   	$4AFC             	; (RT_MATCHWORD=RTC_MATCHWORD)
+00:00FC004C 00FC004A        	    62: 		dc.l   	1$                	; (RT_MATCHTAG)
+00:00FC0050 00FE4E78        	    63: 		dc.l   	RomTagEnd         	; (RT_ENDSKIP)
+00:00FC0054 00              	    64: 		dc.b   	$00               	; (RT_FLAGS=RTW_NEVER)
+00:00FC0055 00              	    65: 		dc.b   	0                 	; (RT_VERSION)
+00:00FC0056 00              	    66: 		dc.b   	0                 	; (RT_TYPE=NT_UNKNOWN)
+00:00FC0057 00              	    67: 		dc.b   	0                 	; (RT_PRI)
+00:00FC0058 00FC0040        	    68: 		dc.l   	0$                	; (RT_NAME)
+00:00FC005C 00FC0110        	    69: 		dc.l   	7$                	; (RT_IDSTRING)
+00:00FC0060 00FC00F8        	    70: 		dc.l   	5$                	; (RT_INIT)
+00:00FC0064 00FC00F8        	    71: 		dcb.l  	1-25+51,5$        	; VEC_INT1-VEC_FPUNDER
+00:00FC0068 *
+00:00FC00D0 4E70            	    72: 2$:		reset  	                  	; VEC_FPOE.w (ColdReset)
+00:00FC00D2 6018            	    73: 3$:		bra.b  	4$                	; VEC_FPOE.w (ColdStart)
+00:00FC00D4 00FC00F8        	    74: 		dcb.l  	1-53+58,5$        	; VEC_FPOVER-VEC_MMUACC
+00:00FC00D8 *
+00:00FC00EC 600000C2        	    75: 4$:		bra.w  	RomEntry          	; VEC_RESV59
+00:00FC00F0 00FC00F8        	    76: 		dcb.l  	1-60+61,5$        	; VEC_UNIMPEA-VEC_UNIMPII
+00:00FC00F4 *
+00:00FC00F8 4FFA0004        	    77: 5$:		lea    	(6$,pc),sp        	; VEC_RESV62.w
+00:00FC00FC 4E73            	    78: 		rte    	                  	; VEC_RESV62.w-VEC_USER[192]
+00:00FC00FE 2700            	    79: 6$:		dc.w   	%0010011100000000 	; (exception ($00,sp))
+00:00FC0100 00FC00D0        	    80: 		dc.l   	2$                	; (exception ($02,sp))
+00:00FC0104 007C            	    81: 		dc.w   	(%0000<<12)!(31*4)	; (exception ($06,sp))
+00:00FC0106 00              	    82: 		dcb.b  	(*-RomBase)&%0010,0
+00:00FC0107 *
+                            	    83: 		dcb.b  	(*-RomBase)&%0100,0
+00:00FC0108 00              	    84: 		dcb.b  	(*-RomBase)&%1000,0
+00:00FC0109 *
+00:00FC0110 637075626C74726F	    85: 7$:		dc.b   	'cpubltro.rom 0.4.1 (17.05.2025)'
+00:00FC0118 2E726F6D20302E34
+00:00FC0120 2E31202831372E30
+00:00FC0128 352E3230323529
+                            	    86: 	IFNE	ROM_NTSC
+00:00FC012F 204E545343      	    87: 		dc.b   	' NTSC'
+                            	    88: 	ELSE
+                            	    89: 		dc.b   	' PAL '
+                            	    90: 	ENDC
+00:00FC0134 0D              	    91: 		dc.b   	13,10,0
+00:00FC0135 0A
+00:00FC0136 00
+00:00FC0137 2863292032303235	    92: 		dc.b   	'(c) 2025 Nico Bendlin <nico@nicode.net>',10
+00:00FC013F 204E69636F204265
+00:00FC0147 6E646C696E203C6E
+00:00FC014F 69636F406E69636F
+00:00FC0157 64652E6E65743E
+00:00FC015E 0A
+00:00FC015F 4E6F205269676874	    93: 		dc.b   	'No Rights Reserved.',0
+00:00FC0167 7320526573657276
+00:00FC016F 65642E
+00:00FC0172 00
+00:00FC0173 68747470733A2F2F	    94: 		dc.b   	'https://github.com/nicodex/amiga-ocs-cpubltro',0
+00:00FC017B 6769746875622E63
+00:00FC0183 6F6D2F6E69636F64
+00:00FC018B 65782F616D696761
+00:00FC0193 2D6F63732D637075
+00:00FC019B 626C74726F
+00:00FC01A0 00
+00:00FC01A1 00              	    95: 		dcb.b  	(*-RomBase)&%0001,0
+00:00FC01A2 00              	    96: 		dcb.b  	(*-RomBase)&%0010,0
+00:00FC01A3 *
+00:00FC01A4 00              	    97: 		dcb.b  	(*-RomBase)&%0100,0
+00:00FC01A5 *
+00:00FC01A8 00              	    98: 		dcb.b  	(*-RomBase)&%1000,0
+00:00FC01A9 *
+                            	    99: 
+                            	   100: ;-----------------------------------------------------------------------------
+                            	   101: ;
+                            	   102: ;                               ROM entry point
+                            	   103: ;
+                            	   104: ;  It has to be decided which memory area will/would be used as the initial
+                            	   105: ;  supervisor stack. There is neither a specified, nor a safe memory region.
+                            	   106: ;  Initial Bootstrap/Kickstart supervisor stack pointers:
+                            	   107: ;    - $040000 A1000 Bootstrap, Kickstart 1.2/1.3
+                            	   108: ;    - $020000 Kickstart 0.7/1.0/1.1
+                            	   109: ;    - $000400 A3000 Bootstrap, Kickstart 2.x/3.x
+                            	   110: ;  The latter address is right at the end of the CPU exception vector table.
+                            	   111: ;  Since the stack grows down into the 192 User Interrupt exception vectors
+                            	   112: ;  (expected to be unused by Amiga hardware), the reset impact is minimized
+                            	   113: ;  (Kickstart will try to find/reuse the previous exec.library after reset).
+                            	   114: ;
+                            	   115: ;  Special case: The Non-Maskable Interrupt (NMI) cannot be suppressed, and
+                            	   116: ;  the CPU will push the exception frame to the supervisor stack before the
+                            	   117: ;  exception vector is called. Because writing to any memory is not desired,
+                            	   118: ;  the supervisor stack is placed in ROM (exception frame/information lost).
+                            	   119: ;  Even if this ROM is run from a KICK floppy disk on the A1000, the loaded
+                            	   120: ;  ROM is write-protected (on reset the A1K Bootstrap is visible at $F80000
+                            	   121: ;  and the $FC0000 WCS/WOM is writable -- a write access to $F80000-$FBFFFF
+                            	   122: ;  enables the WCS/WOM write protection and Kickstart mirroring at $F80000).
+                            	   123: ;
+                            	   124: RomEntry:
+00:00FC01B0 4FFAFFFE        	   125: 		lea    	(RomEntry,pc),SP
+                            	   126: 		;
+                            	   127: 		; disable/clear all interrupts/DMA
+                            	   128: 		;
+                            	   129: 		;  SR: 	#%TTSM-III---XNZVC
+00:00FC01B4 46FC2700        	   130: 		move.w 	#%0010011100000000,sr	; supervisor mode, IPL = 7
+00:00FC01B8 4DF900DFF000    	   131: 		lea    	($DFF000).L,A6       	; _custom
+00:00FC01BE 303C7FFF        	   132: 		move.w 	#$7FFF,d0            	; #~INTF_SETCLR/~DMAF_SETCLR
+00:00FC01C2 3D40009A        	   133: 		move.w 	d0,($09A,A6)         	; (intena,_custom)
+00:00FC01C6 3D40009C        	   134: 		move.w 	d0,($09C,A6)         	; (intreq,_custom)
+00:00FC01CA 3D400096        	   135: 		move.w 	d0,($096,A6)         	; (dmacon,_custom)
+                            	   136: 		;
+                            	   137: 		; {this would} disable the ROM overlay
+                            	   138: 		;
+                            	   139: 		;   For Gary-based systems the OVL-pin is set as output
+                            	   140: 		;   and the /OVL-bit is cleared to disable the overlay.
+                            	   141: 		;   On Gayle-based systems (some extension cards emulate
+                            	   142: 		;   a Gayle, e.g. to add/provide IDE disks) the overlay
+                            	   143: 		;   is disabled with a write access to a CIA-A register.
+                            	   144: 		;
+                            	   145: 	;	move.b 	#CIAF_LED!CIAF_OVERLAY,(_ciaa+ciaddra)
+                            	   146: 	;	bclr.b 	#CIAB_OVERLAY,(_ciaa+ciapra)
+                            	   147: 
+                            	   148: ;-----------------------------------------------------------------------------
+                            	   149: ;
+                            	   150: ;          Constant registers for the rest of the code (upper case)
+                            	   151: ;
+                            	   152: RegInit:
+                            	   153: 	;	lea    	($DFF000),A6	; _custom
+00:00FC01CE 49EE0110        	   154: 		lea    	($110,A6),A4	; (bpl1dat,_custom)
+00:00FC01D2 4BEE0144        	   155: 		lea    	($144,A6),A5	; (spr0data/spr0datb,_custom)
+00:00FC01D6 7000            	   156: 		moveq  	#0,D0       	; zero
+                            	   157: 
+                            	   158: ;-----------------------------------------------------------------------------
+                            	   159: ;
+                            	   160: ;                    LoRes 320x200 (NTSC) / 320x256 (PAL)
+                            	   161: ;
+                            	   162: ScrInit:
+                            	   163: MY_SCR_W  	EQU	320
+                            	   164: 	IFNE	ROM_NTSC
+                            	   165: MY_SCR_H  	EQU	200
+                            	   166: 	ELSE
+                            	   167: MY_SCR_H  	EQU	256
+                            	   168: 	ENDC
+                            	   169: MY_SCR_L  	EQU	129
+                            	   170: MY_SCR_T  	EQU	44
+                            	   171: MY_SCR_R  	EQU	MY_SCR_L+MY_SCR_W
+                            	   172: MY_SCR_B  	EQU	MY_SCR_T+MY_SCR_H
+                            	   173: MY_DIWSTRT	EQU	(MY_SCR_T<<8)!MY_SCR_L
+                            	   174: MY_DIWSTOP	EQU	((MY_SCR_B&$FF)<<8)!(MY_SCR_R&$FF)
+                            	   175: MY_DIWLONG	EQU	(MY_DIWSTRT<<16)!MY_DIWSTOP
+                            	   176: MY_BPLCON0	EQU	%0001001000000000 	; BPU=1,COLORON
+                            	   177: MY_BPLCONL	EQU	(MY_BPLCON0<<16)!0	; PFH=0
+                            	   178: MY_BPLCON2	EQU	%0000000000100100 	; PFP=SP01/SP23/SP45/SP67/PF
+                            	   179: 	IFNE	ROM_NTSC
+                            	   180: MY_BEAMCON	EQU	%0000000000000000 	; NTSC
+                            	   181: 	ELSE
+                            	   182: MY_BEAMCON	EQU	%0000000000100000 	; PAL
+                            	   183: 	ENDC
+                            	   184: 
+                            	   185: 		;
+                            	   186: 		; WaitTOF
+                            	   187: 		;
+00:00FC01D8 012E0005        	   188: 0$:		btst.b 	D0,($004+1,A6)  ; (vposr:V8,_custom)
+00:00FC01DC 67FA            	   189: 		beq.b  	0$
+00:00FC01DE 012E0005        	   190: 1$:		btst.b 	D0,($004+1,A6)  ; (vposr:V8,_custom)
+00:00FC01E2 66FA            	   191: 		bne.b  	1$
+                            	   192: 		;
+                            	   193: 		; setup screen/display
+                            	   194: 		;
+00:00FC01E4 2D7C2C81F4C1008E	   195: 		move.l 	#MY_DIWLONG,($08E,A6)	; (diwstrt/diwstop,_custom)
+00:00FC01EC 2D7C120000000100	   196: 		move.l 	#MY_BPLCONL,($100,A6)	; (bplcon0/bplcon1,_custom)
+00:00FC01F4 3D7C00240104    	   197: 		move.w 	#MY_BPLCON2,($104,A6)	; (bplcon2,_custom)
+00:00FC01FA 3D7C000001DC    	   198: 		move.w 	#MY_BEAMCON,($1DC,A6)	; (beamcon0,_custom)
+                            	   199: 		;
+                            	   200: 		; setup color palette
+                            	   201: 		;
+00:00FC0200 2D7C0AAA0A0A0180	   202: 		move.l 	#$0AAA0A0A,($180,A6) 	; (color00/color01,_custom)
+00:00FC0208 41EE01A0        	   203: 		lea    	(16*2+$180,A6),a0
+00:00FC020C 7203            	   204: 		moveq  	#(4-1),d1
+00:00FC020E 30C0            	   205: 2$:		move.w 	D0,(a0)+
+00:00FC0210 20FC0F000FDD    	   206: 		move.l 	#$0F000FDD,(a0)+
+00:00FC0216 30FC0FFF        	   207: 		move.w 	#$0FFF,(a0)+
+00:00FC021A 51C9FFF2        	   208: 		dbf    	d1,2$
+                            	   209: 		;
+                            	   210: 		; force long fields
+                            	   211: 		;
+00:00FC021E 322E0004        	   212: 		move.w 	($004,A6),d1  	; (vposr,_custom)
+00:00FC0222 6B08            	   213: 		bmi.s  	3$            	; LOF=15
+00:00FC0224 00418000        	   214: 		ori.w  	#$8000,d1     	; LOF
+00:00FC0228 3D41002A        	   215: 		move.w 	d1,($02A,A6)  	; (vposw,_custom)
+00:00FC022C 012E0005        	   216: 3$:		btst.b 	D0,($004+1,A6)	; (vposr:V8,_custom)
+00:00FC0230 67FA            	   217: 		beq.b  	3$
+00:00FC0232 012E0005        	   218: 4$:		btst.b 	D0,($004+1,A6)	; (vposr:V8,_custom)
+00:00FC0236 66FA            	   219: 		bne.b  	4$
+00:00FC0238 322E0004        	   220: 		move.w 	($004,A6),d1
+00:00FC023C 6B08            	   221: 		bmi.s  	5$
+00:00FC023E 00418000        	   222: 		ori.w  	#$8000,d1
+00:00FC0242 3D41002A        	   223: 		move.w 	d1,($02A,A6)
+                            	   224: 5$:
+                            	   225: 		;
+                            	   226: 		; trigger bitplane
+                            	   227: 		;
+00:00FC0246 3880            	   228: 		move.w 	D0,(A4)
+                            	   229: 
+                            	   230: ;-----------------------------------------------------------------------------
+                            	   231: ;
+                            	   232: ;                                  Main loop
+                            	   233: ;
+                            	   234: 	IFNE	ROM_NTSC
+                            	   235: MY_ANIM_LEN	EQU	14*2
+                            	   236: MY_SPRLINES	EQU	93
+                            	   237: MY_SPRSTRTY	EQU	8
+                            	   238: MY_GRAVSTEP	EQU	17
+                            	   239: 	ELSE
+                            	   240: MY_ANIM_LEN	EQU	12*2
+                            	   241: MY_SPRLINES	EQU	112
+                            	   242: MY_SPRSTRTY	EQU	16+8
+                            	   243: MY_GRAVSTEP	EQU	14
+                            	   244: 	ENDC
+                            	   245: MY_SPR_SIZE	EQU	(4*7)*(1+MY_SPRLINES)	; includes the top skip line
+                            	   246: MY_SPRSTRTX	EQU	-((MY_SCR_W-112)/2)  	; rotate eastward, move left
+                            	   247: MY_SPRMOVEX	EQU	2                    	; positions are in .5 pixels
+                            	   248: MY_SPRMOVEY	EQU	2                    	; positions are in .5 pixels
+                            	   249: MY_ANIMSTEP	EQU	1                    	; half speed (double frames)
+                            	   250: DrwInit:
+                            	   251: 		;
+                            	   252: 		; init mouse (data a0)
+                            	   253: 		;
+00:00FC0248 366E000A        	   254: 		move.w 	($00A,A6),a3	; (joy0dat,_custom)
+00:00FC024C 4E63            	   255: 		move   	a3,usp
+00:00FC024E 2C00            	   256: 		move.l 	D0,d6
+                            	   257: 		;
+                            	   258: 		; init globe (data a2, skip a7)
+                            	   259: 		;
+00:00FC0250 2800            	   260: 		move.l 	D0,d4
+00:00FC0252 3A3C0010        	   261: 		move.w 	#(MY_SPRSTRTY*2),d5
+00:00FC0256 4845            	   262: 		swap   	d5
+00:00FC0258 3A3CFF30        	   263: 		move.w 	#(MY_SPRSTRTX*2),d5
+                            	   264: DrwLoop:
+                            	   265: 		;
+                            	   266: 		; setup pointer
+                            	   267: 		;
+00:00FC025C 322E000A        	   268: 		move.w 	($00A,A6),d1	; (joy0dat,_custom)
+00:00FC0260 4E6B            	   269: 		move   	usp,a3
+00:00FC0262 340B            	   270: 		move.w 	a3,d2
+00:00FC0264 3641            	   271: 		movea.w	d1,a3
+00:00FC0266 4E63            	   272: 		move   	a3,usp
+00:00FC0268 1602            	   273: 		move.b 	d2,d3
+00:00FC026A 9601            	   274: 		sub.b  	d1,d3
+00:00FC026C 4883            	   275: 		ext.w  	d3
+00:00FC026E 9C43            	   276: 		sub.w  	d3,d6
+00:00FC0270 6A02            	   277: 		bpl.s  	0$
+00:00FC0272 3C00            	   278: 		move.w 	D0,d6
+00:00FC0274 4846            	   279: 0$:		swap   	d6
+00:00FC0276 E04A            	   280: 		lsr.w  	#8,d2
+00:00FC0278 E049            	   281: 		lsr.w  	#8,d1
+00:00FC027A 1602            	   282: 		move.b 	d2,d3
+00:00FC027C 9601            	   283: 		sub.b  	d1,d3
+00:00FC027E 4883            	   284: 		ext.w  	d3
+00:00FC0280 9C43            	   285: 		sub.w  	d3,d6
+00:00FC0282 6A02            	   286: 		bpl.s  	1$
+00:00FC0284 3C00            	   287: 		move.w 	D0,d6
+00:00FC0286 0C4600C8        	   288: 1$:		cmpi.w 	#MY_SCR_H,d6
+00:00FC028A 6F04            	   289: 		ble.s  	2$
+00:00FC028C 3C3C00C8        	   290: 		move.w 	#MY_SCR_H,d6
+00:00FC0290 41FA04E4        	   291: 2$:		lea    	(PtrData,pc),a0
+00:00FC0294 3206            	   292: 		move.w 	d6,d1
+00:00FC0296 E549            	   293: 		lsl.w  	#2,d1
+00:00FC0298 90C1            	   294: 		suba.w 	d1,a0
+00:00FC029A 4846            	   295: 		swap   	d6
+00:00FC029C 0C460140        	   296: 		cmpi.w 	#MY_SCR_W,d6
+00:00FC02A0 6F04            	   297: 		ble.s  	3$
+00:00FC02A2 3C3C0140        	   298: 		move.w 	#MY_SCR_W,d6
+00:00FC02A6 3406            	   299: 3$:		move.w 	d6,d2
+00:00FC02A8 06420081        	   300: 		addi.w 	#MY_SCR_L,d2
+00:00FC02AC 3202            	   301: 		move.w 	d2,d1
+00:00FC02AE E249            	   302: 		lsr.w  	#1,d1
+00:00FC02B0 4841            	   303: 		swap   	d1
+00:00FC02B2 3202            	   304: 		move.w 	d2,d1
+00:00FC02B4 02410001        	   305: 		andi.w 	#1,d1
+00:00FC02B8 2D410140        	   306: 		move.l 	d1,($140,A6)	; (spr0pos/spr0ctl,_custom)
+                            	   307: GrdCalc:
+                            	   308: 		;
+                            	   309: 		; setup grid
+                            	   310: 		;
+00:00FC02BC 43FA0976        	   311: 		lea    	(GrdData,pc),a1
+                            	   312: SprCalc:
+                            	   313: 		;
+                            	   314: 		; setup globe
+                            	   315: 		;
+00:00FC02C0 4FFA0A48        	   316: 		lea    	(SprSkip,pc),a7
+00:00FC02C4 45FA0BD6        	   317: 		lea    	(SprData,pc),a2
+00:00FC02C8 3204            	   318: 		move.w 	d4,d1
+00:00FC02CA C2FC0A48        	   319: 		mulu   	#MY_SPR_SIZE,d1
+00:00FC02CE D5C1            	   320: 		adda.l 	d1,a2
+00:00FC02D0 2405            	   321: 		move.l 	d5,d2
+00:00FC02D2 4842            	   322: 		swap   	d2
+00:00FC02D4 3202            	   323: 		move.w 	d2,d1
+00:00FC02D6 E241            	   324: 		asr.w  	#1,d1
+00:00FC02D8 670A            	   325: 		beq.s  	1$	; top data line = skip
+00:00FC02DA 6A02            	   326: 		bpl.s  	0$
+00:00FC02DC 4441            	   327: 		neg.w  	d1
+00:00FC02DE 5341            	   328: 0$:		subq.w 	#1,d1
+00:00FC02E0 D241            	   329: 		add.w  	d1,d1
+00:00FC02E2 9EC1            	   330: 		suba.w 	d1,a7
+00:00FC02E4 4842            	   331: 1$:		swap   	d2
+00:00FC02E6 E242            	   332: 		asr.w  	#1,d2
+00:00FC02E8 6A08            	   333: 		bpl.s  	2$
+00:00FC02EA 4442            	   334: 		neg.w  	d2
+00:00FC02EC D5FC00011FE0    	   335: 		adda.l 	#(MY_ANIM_LEN*MY_SPR_SIZE),a2
+00:00FC02F2 06420081        	   336: 2$:		addi.w 	#MY_SCR_L,d2
+00:00FC02F6 3202            	   337: 		move.w 	d2,d1
+00:00FC02F8 E249            	   338: 		lsr.w  	#1,d1
+00:00FC02FA 4841            	   339: 		swap   	d1
+00:00FC02FC 3202            	   340: 		move.w 	d2,d1
+00:00FC02FE 02410001        	   341: 		andi.w 	#$0001,d1
+00:00FC0302 7408            	   342: 		moveq  	#(16>>1),d2
+00:00FC0304 4842            	   343: 		swap   	d2
+00:00FC0306 2D410148        	   344: 		move.l 	d1,($148,A6)	; (spr1pos/spr1ctl,_custom)
+00:00FC030A D282            	   345: 		add.l  	d2,d1
+00:00FC030C 2D410150        	   346: 		move.l 	d1,($150,A6)	; (spr2pos/spr2ctl,_custom)
+00:00FC0310 D282            	   347: 		add.l  	d2,d1
+00:00FC0312 2D410158        	   348: 		move.l 	d1,($158,A6)	; (spr3pos/spr3ctl,_custom)
+00:00FC0316 D282            	   349: 		add.l  	d2,d1
+00:00FC0318 2D410160        	   350: 		move.l 	d1,($160,A6)	; (spr4pos/spr4ctl,_custom)
+00:00FC031C D282            	   351: 		add.l  	d2,d1
+00:00FC031E 2D410168        	   352: 		move.l 	d1,($168,A6)	; (spr5pos/spr5ctl,_custom)
+00:00FC0322 D282            	   353: 		add.l  	d2,d1
+00:00FC0324 2D410170        	   354: 		move.l 	d1,($170,A6)	; (spr6pos/spr6ctl,_custom)
+00:00FC0328 D282            	   355: 		add.l  	d2,d1
+00:00FC032A 2D410178        	   356: 		move.l 	d1,($178,A6)	; (spr7pos/spr7ctl,_custom)
+                            	   357: PosHorz:
+00:00FC032E 4A45            	   358: 		tst.w  	d5
+00:00FC0330 6B16            	   359: 		bmi.s  	1$
+00:00FC0332 0C45019F        	   360: 		cmpi.w 	#(((MY_SCR_W-112)*2)-1),d5
+00:00FC0336 6D04            	   361: 		blt.s  	0$
+00:00FC0338 4445            	   362: 		neg.w  	d5
+00:00FC033A 6022            	   363: 		bra.s  	PosVert
+00:00FC033C 5445            	   364: 0$:		addq.w 	#MY_SPRMOVEX,d5
+00:00FC033E 5344            	   365: 		subq.w 	#MY_ANIMSTEP,d4
+00:00FC0340 6A1C            	   366: 		bpl.s  	PosVert
+00:00FC0342 383C001B        	   367: 		move.w 	#(MY_ANIM_LEN-MY_ANIMSTEP),d4
+00:00FC0346 6016            	   368: 		bra.s  	PosVert
+00:00FC0348 0C45FFFF        	   369: 1$:		cmpi.w 	#-1,d5
+00:00FC034C 6D04            	   370: 		blt.s  	2$
+00:00FC034E 4445            	   371: 		neg.w  	d5
+00:00FC0350 600C            	   372: 		bra.s  	PosVert
+00:00FC0352 5445            	   373: 2$:		addq.w 	#MY_SPRMOVEX,d5
+00:00FC0354 5244            	   374: 		addq.w 	#MY_ANIMSTEP,d4
+00:00FC0356 0C44001C        	   375: 		cmpi.w 	#MY_ANIM_LEN,d4
+00:00FC035A 6502            	   376: 		blo.s  	PosVert
+00:00FC035C 3800            	   377: 		move.w 	D0,d4
+                            	   378: PosVert:
+00:00FC035E 7201            	   379: 		moveq  	#MY_SPRMOVEY-1,d1
+00:00FC0360 4844            	   380: 0$:		swap   	d4
+00:00FC0362 4845            	   381: 		swap   	d5
+00:00FC0364 4A45            	   382: 		tst.w   d5
+00:00FC0366 6B16            	   383: 		bmi.s  	1$
+00:00FC0368 5244            	   384: 		addq.w 	#1,d4
+00:00FC036A 2400            	   385: 		move.l 	D0,d2
+00:00FC036C 3404            	   386: 		move.w 	d4,d2
+00:00FC036E 84FC0011        	   387: 		divu   	#MY_GRAVSTEP,d2
+00:00FC0372 DA42            	   388: 		add.w  	d2,d5
+00:00FC0374 0C4500D6        	   389: 		cmpi.w 	#(2*(MY_SCR_H-MY_SPRLINES)),d5
+00:00FC0378 6F18            	   390: 		ble.s  	4$
+00:00FC037A 9A42            	   391: 		sub.w  	d2,d5
+00:00FC037C 6012            	   392: 		bra.s  	3$
+00:00FC037E 5344            	   393: 1$:		subq.w 	#1,d4
+00:00FC0380 6B0C            	   394: 		bmi.s  	2$
+00:00FC0382 2400            	   395: 		move.l 	D0,d2
+00:00FC0384 3404            	   396: 		move.w 	d4,d2
+00:00FC0386 84FC0011        	   397: 		divu   	#MY_GRAVSTEP,d2
+00:00FC038A DA42            	   398: 		add.w  	d2,d5
+00:00FC038C 6004            	   399: 		bra.s  	4$
+00:00FC038E 3800            	   400: 2$:		move.w 	D0,d4
+00:00FC0390 4445            	   401: 3$:		neg.w  	d5
+00:00FC0392 4845            	   402: 4$:		swap   	d5
+00:00FC0394 4844            	   403: 		swap   	d4
+00:00FC0396 51C9FFC8        	   404: 		dbf    	d1,0$
+                            	   405: DrwCalc:
+                            	   406: 		;
+                            	   407: 		; init counter
+                            	   408: 		;
+00:00FC039A 3E3C00C7        	   409: 		move.w 	#(MY_SCR_H-1),d7
+                            	   410: DrwSync:
+                            	   411: 		;
+                            	   412: 		; sync to screen top - 1 / time slot $DE/$DF
+                            	   413: 		;
+00:00FC039E 012E0005        	   414: 		btst.b 	D0,($004+1,A6)
+00:00FC03A2 66FA            	   415: 		bne.b  	DrwSync
+                            	   416: MY_SYNC_MAX	EQU	($DE+(9/2))-(-1+4+2+4+7)-4
+                            	   417: MY_SYNC_POS	EQU	MY_SYNC_MAX-(-2+4+2+5)-(4+2+4)-(4-3)
+                            	   418: MY_SYNC_MIN	EQU	MY_SYNC_POS+(-1+4+2+3)+(4-3)-1
+                            	   419: 	IFNE	(MY_SYNC_MAX!MY_SYNC_POS!MY_SYNC_MIN)&1
+                            	   420: 	FAIL	"Sync position odd, review the code."
+                            	   421: 	ENDC
+                            	   422: MY_SYNC_TAB	EQU	(1<<4)-2
+                            	   423: 	IFLT	MY_SYNC_TAB-(MY_SYNC_MAX-MY_SYNC_MIN)
+                            	   424: 	FAIL	"Sync table overflow, review the code."
+                            	   425: 	ENDC
+00:00FC03A4 47EE0006        	   426: 		lea    	($006,A6),a3	; (vhposr,_custom)
+00:00FC03A8 343C2BBA        	   427: 		move.w 	#((MY_SCR_T-1)<<8)!MY_SYNC_POS,d2
+00:00FC03AC 363C2BC0        	   428: 		move.w 	#((MY_SCR_T-1)<<8)!(MY_SYNC_MAX-MY_SYNC_TAB),d3
+00:00FC03B0 3213            	   429: 0$:		move.w 	(a3),d1        	; .r.p
+00:00FC03B2 B242            	   430: 		cmp.w  	d2,d1          	; .p
+00:00FC03B4 65FA            	   431: 		blo.b  	0$             	; [.]..p/..p.p (continue/branch)
+00:00FC03B6 3213            	   432: 		move.w 	(a3),d1        	; .r.p
+00:00FC03B8 9243            	   433: 		sub.w  	d3,d1          	; .p
+00:00FC03BA C27C000E        	   434: 		and.w  	#MY_SYNC_TAB,d1	; .p.p
+00:00FC03BE 4EFB1002        	   435: 		jmp    	(1$,pc,d1.w)   	; ....p.p
+                            	   436: 1$:
+                            	   437: 	REPT	MY_SYNC_TAB/2
+                            	   438: 		nop
+                            	   439: 	ENDR
+00:00FC03C2 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03C4 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03C6 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03C8 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03CA 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03CC 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03CE 4E71            	     1R 		nop
+                            	     2R 	
+00:00FC03D0 47EE017C        	   440: 		lea    	($17C,A6),a3   	; .p.p (spr7dat,_custom)
+                            	   441: DrwLine:
+00:00FC03D4 2A98            	   442: 		move.l 	(a0)+,(A5)     	; $DE-$05 .R.r.[-]W.w.p (spr0dat)
+00:00FC03D6 2D5A014C        	   443: 		move.l 	(a2)+,($14C,A6)	; $06-$11 .R.r.p.W.w.p  (spr1dat)
+00:00FC03DA 2D5A0154        	   444: 		move.l 	(a2)+,($154,A6)	; $12-$1D .R.r.p.W.w.p  (spr2dat)
+00:00FC03DE 2D5A015C        	   445: 		move.l 	(a2)+,($15C,A6)	; $1E-$29 .R.r.p.W.w.p  (spr3dat)
+00:00FC03E2 2D5A0164        	   446: 		move.l 	(a2)+,($164,A6)	; $2A-$35 .R.r.p.W.w.p  (spr4dat)
+00:00FC03E6 3880            	   447: 		move.w 	D0,(A4)        	; $36-$39 .w.p          (bpl0dat)
+00:00FC03E8 3221            	   448: 		move.w 	-(a1),d1       	; $3A-$3E ..r.p         (GrdData)
+00:00FC03EA 2D5A016C        	   449: 		move.l 	(a2)+,($16C,A6)	; $3F-$4A .R.r.p.W.w.p  (spr5dat)
+00:00FC03EE 2D5A0174        	   450: 		move.l 	(a2)+,($174,A6)	; $4B-$56 .R.r.p.W.w.p  (spr6dat)
+00:00FC03F2 3881            	   451: 		move.w 	d1,(A4)        	; $57-$5A .w.p          (bpl0dat)
+00:00FC03F4 361A            	   452: 		move.w 	(a2)+,d3       	; $5B-$5E .r.p          (SprData)
+00:00FC03F6 3881            	   453: 		move.w 	d1,(A4)        	; $5F-$62 .w.p          (bpl0dat)
+00:00FC03F8 36C3            	   454: 		move.w 	d3,(a3)+       	; $63-$66 .w.p          (spr7data)
+00:00FC03FA 3881            	   455: 		move.w 	d1,(A4)        	; $67-$6A .w.p          (bpl0dat)
+00:00FC03FC 361A            	   456: 		move.w 	(a2)+,d3       	; $6B-$6E .r.p          (SprData)
+00:00FC03FE 3881            	   457: 		move.w 	d1,(A4)        	; $6F-$72 .w.p          (bpl0dat)
+00:00FC0400 3683            	   458: 		move.w 	d3,(a3)        	; $73-$76 .w.p          (spr7datb)
+00:00FC0402 3881            	   459: 		move.w 	d1,(A4)        	; $77-$7A .w.p          (bpl0dat)
+00:00FC0404 558B            	   460: 		subq.l 	#2,a3          	; $7B-$7E .p..
+00:00FC0406 3881            	   461: 		move.w 	d1,(A4)        	; $7F-$82 .w.p          (bpl0dat)
+00:00FC0408 4E71            	   462: 		nop
+00:00FC040A 4E71            	   463: 		nop
+00:00FC040C 3881            	   464: 		move.w 	d1,(A4)        	; $87-$8A .w.p          (bpl0dat)
+00:00FC040E 4E71            	   465: 		nop
+00:00FC0410 4E71            	   466: 		nop
+00:00FC0412 3881            	   467: 		move.w 	d1,(A4)        	; $8F-$92 .w.p          (bpl0dat)
+00:00FC0414 4E71            	   468: 		nop
+00:00FC0416 4E71            	   469: 		nop
+00:00FC0418 3881            	   470: 		move.w 	d1,(A4)        	; $97-$9A .w.p          (bpl0dat)
+00:00FC041A 4E71            	   471: 		nop
+00:00FC041C 4E71            	   472: 		nop
+00:00FC041E 3881            	   473: 		move.w 	d1,(A4)        	; $9F-$A2 .w.p          (bpl0dat)
+00:00FC0420 4E71            	   474: 		nop
+00:00FC0422 4E71            	   475: 		nop
+00:00FC0424 3881            	   476: 		move.w 	d1,(A4)        	; $A7-$AA .w.p          (bpl0dat)
+00:00FC0426 4E71            	   477: 		nop
+00:00FC0428 4E71            	   478: 		nop
+00:00FC042A 3881            	   479: 		move.w 	d1,(A4)        	; $AF-$B2 .w.p          (bpl0dat)
+00:00FC042C 4E71            	   480: 		nop
+00:00FC042E 4E71            	   481: 		nop
+00:00FC0430 3881            	   482: 		move.w 	d1,(A4)        	; $B7-$BA .w.p          (bpl0dat)
+00:00FC0432 4E71            	   483: 		nop
+00:00FC0434 4E71            	   484: 		nop
+00:00FC0436 3881            	   485: 		move.w 	d1,(A4)        	; $BF-$C2 .w.p          (bpl0dat)
+00:00FC0438 4E71            	   486: 		nop
+00:00FC043A 38BC8000        	   487: 		move.w 	#$8000,(A4)    	; $C5-$CA .p.w.p        (bpl0dat)
+00:00FC043E 4E71            	   488: 		nop
+00:00FC0440 4E71            	   489: 		nop
+00:00FC0442 4E71            	   490: 		nop
+00:00FC0444 C100            	   491: 		abcd   	D0,D0
+00:00FC0446 94DF            	   492: 		suba.w 	(a7)+,a2       	; $D4-$D9 .r.p..        (SprSkip)
+00:00FC0448 51CFFF8A        	   493: 		dbf    	d7,DrwLine     	; $DA-$DE ..p.p   (taken)
+                            	   494: 		       	               	;    -$E0 ..p.p.p (count)
+                            	   495: 	IFLT	MY_SCR_B-256
+00:00FC044C 012E0005        	   496: 0$:		btst.b 	D0,($004+1,A6)  ; (vposr:V8,_custom)
+00:00FC0450 67FA            	   497: 		beq.b  	0$
+                            	   498: 	ENDC
+00:00FC0452 6000FE08        	   499: 		bra.w  	DrwLoop
+                            	   500: 
+                            	   501: ;-----------------------------------------------------------------------------
+                            	   502: ;
+                            	   503: ;                           Cursor image data (a0)+
+                            	   504: ;
+00:00FC0456 00000000        	   505: 		dcb.l  	MY_SCR_H,0
+00:00FC045A *
+                            	   506: PtrData:
+                            	   507: 	INCLUDE	"images/ptrdata.i"
+                            	   508: 
+00:00FC07A6 00000000        	   509: 		dcb.l  	MY_SCR_H-((*-PtrData)/4),0
+00:00FC07AA *
+                            	   510: 
+                            	   511: ;-----------------------------------------------------------------------------
+                            	   512: ;
+                            	   513: ;                           Grid bitmap data -(a1)
+                            	   514: ;
+00:00FC0A96 8000            	   515: 		dc.w   	%1000000000000000
+00:00FC0A98 8000            	   516: 		dc.w   	%1000000000000000
+00:00FC0A9A 8000            	   517: 		dc.w   	%1000000000000000
+00:00FC0A9C 8000            	   518: 		dc.w   	%1000000000000000
+00:00FC0A9E 8000            	   519: 		dc.w   	%1000000000000000
+00:00FC0AA0 8000            	   520: 		dc.w   	%1000000000000000
+00:00FC0AA2 8000            	   521: 		dc.w   	%1000000000000000
+00:00FC0AA4 8000            	   522: 		dc.w   	%1000000000000000
+00:00FC0AA6 8000            	   523: 		dc.w   	%1000000000000000
+00:00FC0AA8 8000            	   524: 		dc.w   	%1000000000000000
+00:00FC0AAA 8000            	   525: 		dc.w   	%1000000000000000
+00:00FC0AAC 8000            	   526: 		dc.w   	%1000000000000000
+00:00FC0AAE 8000            	   527: 		dc.w   	%1000000000000000
+00:00FC0AB0 8000            	   528: 		dc.w   	%1000000000000000
+00:00FC0AB2 FFFF            	   529: 		dc.w   	%1111111111111111
+                            	   530: 	NOLIST
+                            	   550: GrdData:
+                            	   551: 
+                            	   552: ;-----------------------------------------------------------------------------
+                            	   553: ;
+                            	   554: ;                           Sprite skip table (a7)+
+                            	   555: ;
+00:00FC0C34 001C            	   556: 		dcb.w  	(MY_SCR_H-MY_SPRLINES),7*4
+00:00FC0C36 *
+                            	   557: SprSkip:
+00:00FC0D0A 0000            	   558: 		dcb.w  	(1+MY_SPRLINES),0
+00:00FC0D0C *
+00:00FC0DC6 001C            	   559: 		dcb.w  	(MY_SCR_H-MY_SPRLINES),7*4
+00:00FC0DC8 *
+                            	   560: 
+                            	   561: ;-----------------------------------------------------------------------------
+                            	   562: ;
+                            	   563: ;                           Sprite image data (a2)+
+                            	   564: ;
+                            	   565: 
+                            	   566: 
+                            	   567: SprData:
+                            	   568: 	IFNE	ROM_NTSC
+                            	   569: 	INCLUDE	"images/ntscdata.i"
+                            	   570: 	ELSE
+                            	   571: 	INCLUDE	"images/balldata.i"
+                            	   572: 	ENDC
+                            	   573: 	IFNE	(*-SprData)-(2*MY_ANIM_LEN*MY_SPR_SIZE)-(4*7)
+                            	   574: 	FAIL	"Unexpected sprite data size, review the data/code."
+                            	   575: 	ENDC
+                            	   576: 
+                            	   577: ;-----------------------------------------------------------------------------
+                            	   578: ;
+                            	   579: ;                                   done :)
+                            	   580: ;
+                            	   581: 		dcb.b  	(*-RomBase)&%0010,ROM_FILL
+                            	   582: RomTagEnd:
+                            	   583: 
+                            	   584: ;-----------------------------------------------------------------------------
+                            	   585: ;
+                            	   586: ;              Kickstart ROM footer / MC68000 Autovector indices
+                            	   587: ;
+                            	   588: ;     $FFFFE8 ROM checksum (not used, to be updated by the build process)
+                            	   589: ;     $FFFFEC ROM size (not used, intended to be used for software reset)
+                            	   590: ;     $FFFFF0 CPU Autovector interrupt exception vector indices (MC68000)
+                            	   591: ;
+00:00FE4E78 FF              	   592: 		dcb.b	ROM_SIZE-(2*4)-(8*2)-(*-RomBase),ROM_FILL
+00:00FE4E79 *
+00:00FFFFE8 00000000        	   593: 		dc.l 	$00000000	; Kickstart ROM checksum
+00:00FFFFEC 00040000        	   594: 		dc.l 	ROM_SIZE 	; Kickstart ROM size
+00:00FFFFF0 00              	   595: 		dc.b 	0,24	; Spurious Interrupt
+00:00FFFFF1 18
+00:00FFFFF2 00              	   596: 		dc.b 	0,25	; Autovector Level 1 (TBE, DSKBLK, SOFTINT)
+00:00FFFFF3 19
+00:00FFFFF4 00              	   597: 		dc.b 	0,26	; Autovector Level 2 (PORTS)
+00:00FFFFF5 1A
+00:00FFFFF6 00              	   598: 		dc.b 	0,27	; Autovector Level 3 (COPER, VERTB, BLIT)
+00:00FFFFF7 1B
+00:00FFFFF8 00              	   599: 		dc.b 	0,28	; Autovector Level 4 (AUD2, AUD0, AUD3, AUD1)
+00:00FFFFF9 1C
+00:00FFFFFA 00              	   600: 		dc.b 	0,29	; Autovector Level 5 (RBF, DSKSYNC)
+00:00FFFFFB 1D
+00:00FFFFFC 00              	   601: 		dc.b 	0,30	; Autovector Level 6 (EXTER, INTEN)
+00:00FFFFFD 1E
+00:00FFFFFE 00              	   602: 		dc.b 	0,31	; Autovector Level 7 (NMI)
+00:00FFFFFF 1F
+                            	   603: 
+                            	   604: 	END
+                            	   605: 

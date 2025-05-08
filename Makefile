@@ -40,13 +40,13 @@ cpubltro-ntsc.adf : cpubltro.adf.asm cpubltro-ntsc.rom
 	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=1 -o $@ $<
 
 cpubltro-ntsc.rom : cpubltro.asm images/ptrdata.i images/ntscdata.i
-	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=1 -L $@.lst -o $@ $<
+	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=1 -L $@.lst -Lni -Lns -o $@ $<
 
 cpubltro-pal.adf : cpubltro.adf.asm cpubltro-pal.rom
 	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=0 -o $@ $<
 
 cpubltro-pal.rom : cpubltro.asm images/ptrdata.i images/balldata.i
-	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=0 -L $@.lst -o $@ $<
+	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=0 -L $@.lst -Lni -Lns -o $@ $<
 
 distclean: clean
 	rm -rf .idea
