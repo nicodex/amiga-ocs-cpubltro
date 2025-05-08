@@ -2,7 +2,7 @@
 ; SPDX-License-Identifier: CC0-1.0
 ;-----------------------------------------------------------------------------
 ;
-;                  Racing The Beam on the Amiga without RAM
+;                   Racing The Beam on an Amiga without RAM
 ;
 ;	Target requirements:
 ;	  - Motorola 68000 CPU @ 7 MHz (fixed timing)

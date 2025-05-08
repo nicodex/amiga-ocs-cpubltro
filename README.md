@@ -30,12 +30,11 @@ The Amiga 1000 Kickstart disks are the easiest way to test it on real hardware
 but the cpubltro ROM does neither read, nor write any RAM in the system).
 
 Emulation requires a very accurate CPU/DMA simulation, e.g.:  
-  - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (fully cycle-exact)
-  - [vAmigaWeb](https://vamigaweb.github.io/) (Settings / Kickstart ROMs)
+  - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (cycle-exact CPU/DMA)
+  - [vAmigaWeb](https://vamigaweb.github.io/) (settings / kickstart roms ...)
 
 ![vAmigaWeb with activity monitor](images/doc/vamigaweb.jpg)
 
-`TODO`: Replicate the original Boing! demo more closely (grid, sound).
 
 
 Details
@@ -48,7 +47,8 @@ DMA Time Slot Allocation / Horizontal Line
 With active ROM overlay and/or read-only RAM, we have:  
   - 17 stable CPU registers as work memory, for everything
   - no stack (exceptions/interrupts more or less unusable)
-  - no bitplane/sprite/copper DMA, no blits (but BLTNZERO)
+  - no bitplane/sprite/copper DMA, no blits (but BLTNZERO  
+    could be used to read RAM bits 'through' the overlay)
 
 Normally the DMA controller (Agnus) fetches the bitplane data words
 from Chip RAM and sends it to the video processor (Denise) by writing
@@ -58,7 +58,18 @@ Since this conversion is triggered by BPL1DAT and BPLxDAT can be written
 by the CPU, we are able to draw the complete scan line with the CPU.
 Even sprites can be displayed (writing to SPRxDATA enables the sprite).
 
-`TODO`: Much more detailed technical documentation.
+Summary:  
+  - writing BPL1DAT enables sprites (OCS: must be after Burst)
+  - writing BPL1DAT serializes current BPLxDAT for display
+  - BPL2DAT+ keep thier values (no need to write same value)
+  - bitplane serializer shifts-in zeros (no need to write 0)
+  - writing SPRxCTL disables a sprite, and SPRxDATA enables it
+  - VPOS in SPRxPOS/CTL does not matter (Denise only uses HPOS)
+  - NTSC has an extra slot ($E3) every other line (LOL toggle)
+  - the memory refresh slots (M) are always used by the Agnus  
+    (CPU has lower priority, used for init and long line sync)
+  - grid data is reversed (source -(An) needs an extra time slot)
+  - ABCD is used as 3-slot NOP (tricky, X must be 0 to keep D0)
 
 Copy of my DMA time slot allocation development spreadsheet:  
 ```
@@ -115,8 +126,8 @@ to be filled by CPU. This can/will be used for nice effects.
 Aside
 -----
 
-How do you pronounce `cpubltro`: CPU blitro [/ˌsiːˌpiːˈjuː blɪtɹoʊ/](https://itinerarium.github.io/phoneme-synthesis/?w=%2F%CB%8Csi%CB%90%CB%8Cpi%CB%90%CB%88ju%CB%90%20bl%C9%AAt%C9%B9o%CA%8A%2F)
-
+How I pronounce `cpubltro`: CPU Blitro /[ˌsiːˌpiːˈjuː blɪtɹoʊ](https://ipa-reader.com/?text=%CB%8Csi%CB%90%CB%8Cpi%CB%90%CB%88ju%CB%90%20bl%C9%AAt%C9%B9o%CA%8A&voice=Brian)/  
+(but of course you are free to say it however you like)
 
 License
 -------
