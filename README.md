@@ -30,7 +30,7 @@ The Amiga 1000 Kickstart disks are the easiest way to test it on real hardware
 but the cpubltro ROM does neither read, nor write any RAM in the system).
 
 Emulation requires a very accurate CPU/DMA simulation, e.g.:  
-  - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (Windows/Wine)
+  - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (fully cycle-exact)
   - [vAmigaWeb](https://vamigaweb.github.io/) (Settings / Kickstart ROMs)
 
 ![vAmigaWeb with activity monitor](images/doc/vamigaweb.jpg)
