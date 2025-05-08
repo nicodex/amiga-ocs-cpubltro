@@ -17,6 +17,11 @@ Release files:
   - [cpubltro-pal.adf](cpubltro-pal.adf) PAL Kickstart disk (Amiga 1000)
   - [cpubltro-pal.rom](cpubltro-pal.rom) PAL 256K ROM image (MapROM/emu)
 
+Currently both versions use the same drawing routine and differ only in the
+pixel aspect ratio and should work on both systems (yes, even the PAL version
+should also work on NTSC, it is over-drawing into line 35, but the calculations
+per field are completed before the drawing routine syncs to the top line 44).
+
 Revision 2025 demo (Amiga 500 without CIAs, Paula, and RAM):  
 ![Revision 2025 demo board](README.jpg)
 
