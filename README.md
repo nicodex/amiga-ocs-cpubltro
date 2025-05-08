@@ -1,8 +1,8 @@
 Amiga CPU Blit Read-Only (Proof of Concept ROM)
 ===============================================
 
-Racing The Beam on the Amiga without RAM
-----------------------------------------
+Racing The Beam on an Amiga without RAM
+---------------------------------------
 
 Target requirements:  
   - Motorola 68000 CPU @ 7 MHz (fixed timing)
@@ -105,6 +105,12 @@ With `BPLCON0.BPU = 7` the Agnus fills 4 bitplanes with DMA,
 but the Denise draws 6 bitplanes (in Extra Half Brite mode).
 `BPL5DAT/BPL6DAT` are not written by the Agnus and can/have
 to be filled by CPU. This can/will be used for nice effects.
+
+
+Aside
+-----
+
+How do you pronounce `cpubltro`: CPU blitro [/ˌsiːˌpiːˈjuː blɪtɹoʊ/](https://itinerarium.github.io/phoneme-synthesis/?w=%2F%CB%8Csi%CB%90%CB%8Cpi%CB%90%CB%88ju%CB%90%20bl%C9%AAt%C9%B9o%CA%8A%2F)
 
 
 License
