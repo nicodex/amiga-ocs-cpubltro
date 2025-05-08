@@ -17,13 +17,18 @@ Release files:
   - [cpubltro-pal.adf](cpubltro-pal.adf) PAL Kickstart disk (Amiga 1000)
   - [cpubltro-pal.rom](cpubltro-pal.rom) PAL 256K ROM image (MapROM/emu)
 
+Revision 2025 demo (Amiga 500 without CIAs, Paula, and RAM):  
+![Revision 2025 demo board](README.jpg)
+
 The Amiga 1000 Kickstart disks are the easiest way to test it on real hardware
 (of course the Amiga 1000 needs RAM to load the Kickstart from the disk,
 but the cpubltro ROM does neither read, nor write any RAM in the system).
 
+Emulation requires a very accurate CPU/DMA simulation, e.g.:  
+  - [WinUAE](https://www.winuae.net/download/) 5.0.0+ (Windows/Wine)
+  - [vAmigaWeb](https://vamigaweb.github.io/) (Settings / Kickstart ROMs)
 
-Revision 2025 demo (Amiga 500 without CIAs, Paula, and RAM):  
-![Revision 2025 demo board](README.jpg)
+![vAmigaWeb with activity monitor](images/doc/vamigaweb.jpg)
 
 `TODO`: Replicate the original Boing! demo more closely (grid, sound).
 
@@ -84,6 +89,8 @@ ________________________________________________________________________________
 
 Notes
 -----
+
+Comments, bugfixes, and tests on real hardware are very welcome.
 
 Previous research states:  
   - [v0.3.2](https://github.com/nicodex/amiga-ocs-cpubltro/tree/v0.3.2)
