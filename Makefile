@@ -30,8 +30,8 @@ check-pal: cpubltro-pal.rom
 	$(ROMTOOL) info $<
 
 clean:
-	rm -f cpubltro-pal.rom cpubltro-pal.adf
-	rm -f cpubltro-ntsc.rom cpubltro-ntsc.adf
+	rm -f cpubltro-ntsc.rom cpubltro-ntsc.rom.lst cpubltro-ntsc.adf
+	rm -f cpubltro-pal.rom cpubltro-pal.rom.lst cpubltro-pal.adf
 	rm -f images/balldata.i
 	rm -f images/ntscdata.i
 	rm -f images/ptrdata.i
@@ -40,15 +40,15 @@ cpubltro-ntsc.adf : cpubltro.adf.asm cpubltro-ntsc.rom
 	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=1 -o $@ $<
 
 cpubltro-ntsc.rom : cpubltro.asm images/ptrdata.i images/ntscdata.i
-	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=1 -o $@ $<
+	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=1 -L $@.lst -o $@ $<
 
 cpubltro-pal.adf : cpubltro.adf.asm cpubltro-pal.rom
 	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=0 -o $@ $<
 
 cpubltro-pal.rom : cpubltro.asm images/ptrdata.i images/balldata.i
-	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=0 -o $@ $<
+	$(VASM) -Fbin $(VASM_OPTS) -DROM_NTSC=0 -L $@.lst -o $@ $<
 
-distclean:
+distclean: clean
 	rm -rf .idea
 	rm -rf winuae
 
