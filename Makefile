@@ -14,7 +14,10 @@ PYTHON_BIN ?= /usr/bin/env python3
 
 all: cpubltro-ntsc.rom cpubltro-ntsc.adf cpubltro-pal.rom cpubltro-pal.adf
 
-.PHONY: all check check-ntsc check-pal clean distclean test test-pal test-ntsc
+.PHONY: all \
+	check check-ntsc check-pal \
+	clean distclean \
+	test test-ntsc test-pal test-pal-ntsc
 
 check: check-ntsc check-pal
 
@@ -65,17 +68,19 @@ winuae/winuae.exe: | winuae/$(WINUAE_ZIP)
 	cd winuae && unzip $(WINUAE_ZIP)
 
 WINUAE_GUI ?= false
+WINUAE_DBG ?= false
 WINUAE_OPT_GUI = \
 	-s use_gui=$(WINUAE_GUI) \
-	-s win32.start_not_captured=false \
+	-s use_debugger=$(WINUAE_DBG) \
+	-s win32.start_not_captured=$(WINUAE_DBG) \
 	-s win32.nonotificationicon=true \
 
 WINUAE_WIDTH ?= 1920
 WINUAE_HEIGHT ?= 1080
 WINUAE_API ?= direct3d
 WINUAE_API_OPT ?= hardware
-WINUAE_FULLSCREEN ?= true
-WINUAE_OVERSCAN ?= tv_narrow
+WINUAE_FULLSCREEN ?= $(if $(WINUAE_DBG:true=),true,false)
+WINUAE_OVERSCAN ?= $(if $(WINUAE_DBG:true=),tv_narrow,ultra_csync)
 WINUAE_OPT_GFX = \
 	-s gfx_display=0 \
 	-s gfx_width=$(WINUAE_WIDTH) \
@@ -87,8 +92,8 @@ WINUAE_OPT_GFX = \
 	-s gfx_lores_mode=normal \
 	-s gfx_flickerfixer=false \
 	-s gfx_linemode=double \
-	-s gfx_center_horizontal=smart \
-	-s gfx_center_vertical=smart \
+	-s gfx_center_horizontal=none \
+	-s gfx_center_vertical=none \
 	-s gfx_api=$(WINUAE_API) \
 	-s gfx_api_options=$(WINUAE_API_OPT) \
 	-s gfx_overscanmode=$(WINUAE_OVERSCAN) \
@@ -135,6 +140,13 @@ test-pal: cpubltro-pal.rom | winuae/winuae.exe
 		$(WINUAE_OPT_GUI) $(WINUAE_OPT_GFX) \
 		$(WINUAE_OPT_EMU) $(WINUAE_OPT_CPU) \
 		$(WINUAE_OPT_A1K) -s ntsc=false \
+		-s kickstart_rom_file='$(WINE_PWD)\$<'
+
+test-pal-ntsc: cpubltro-pal.rom | winuae/winuae.exe
+	cd winuae && $(WINE) winuae.exe \
+		$(WINUAE_OPT_GUI) $(WINUAE_OPT_GFX) \
+		$(WINUAE_OPT_EMU) $(WINUAE_OPT_CPU) \
+		$(WINUAE_OPT_A1K) -s ntsc=true \
 		-s kickstart_rom_file='$(WINE_PWD)\$<'
 
 
