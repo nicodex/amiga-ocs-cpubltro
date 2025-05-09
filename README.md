@@ -24,6 +24,8 @@ per field are completed before the drawing routine syncs to the top line 44).
 
 Revision 2025 demo (Amiga 500 without CIAs, Paula, and RAM):  
 ![Revision 2025 demo board](README.jpg)
+The [demo video](https://youtu.be/hyXcdH1qwew?feature=shared) gives you a
+brief overview of the project (party-recorded some hours before deadline).
 
 The Amiga 1000 Kickstart disks are the easiest way to test it on real hardware
 (of course the Amiga 1000 needs RAM to load the Kickstart from the disk,
