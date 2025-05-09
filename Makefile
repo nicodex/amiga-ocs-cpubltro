@@ -17,7 +17,8 @@ all: cpubltro-ntsc.rom cpubltro-ntsc.adf cpubltro-pal.rom cpubltro-pal.adf
 .PHONY: all \
 	check check-ntsc check-pal \
 	clean distclean \
-	test test-ntsc test-pal test-pal-ntsc
+	test test-ntsc test-pal test-pal-ntsc \
+	winuae-beta-just-shut-up
 
 check: check-ntsc check-pal
 
@@ -149,4 +150,7 @@ test-pal-ntsc: cpubltro-pal.rom | winuae/winuae.exe
 		$(WINUAE_OPT_A1K) -s ntsc=true \
 		-s kickstart_rom_file='$(WINE_PWD)\$<'
 
+winuae-beta-just-shut-up:
+	$(WINE) reg add 'HKEY_CURRENT_USER\Software\Arabuusimiehet\WinUAE' \
+		/v 'Beta_Just_Shut_Up' /t REG_DWORD /d 68010 /f /reg:32
 
