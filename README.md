@@ -18,9 +18,11 @@ Release files:
   - [cpubltro-pal.rom](cpubltro-pal.rom) PAL 256K ROM image (MapROM/emu)
 
 Currently both versions use the same drawing routine and differ only in the
-pixel aspect ratio and should work on both systems (yes, even the PAL version
-should also work on NTSC, it is over-drawing into line 35, but the calculations
-per field are completed before the drawing routine syncs to the top line 44).
+pixel aspect ratio and should work on both systems. With an ECS Agnus the mode
+is switched to NTSC/PAL on start, independent from the initial display mode.
+The PAL version should even 'work' with a NTSC ICS/OCS Agnus, since it is
+over-drawing into line 35, but the calculations per field are completed
+before the drawing routine syncs to the display window's top line 44.
 
 Revision 2025 demo (Amiga 500 without CIAs, Paula, and RAM):  
 ![Revision 2025 demo board](README.jpg)
