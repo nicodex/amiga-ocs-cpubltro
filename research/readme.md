@@ -1,7 +1,7 @@
 Links
 =====
 
-- [Yet Another Cycle Hunting Table (Yacht)](https://www.atari-forum.com/viewtopic.php?f=68&t=24710)
+- [Yet Another Cycle Hunting Table (Yacht)](https://github.com/danorf69/YACHT)
 
 
 Boing
